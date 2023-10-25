@@ -1,6 +1,12 @@
 from flask import Flask, render_template, make_response
-import os
 import time
+from .firebaseConfig import config
+from pyrebase import pyrebase
+
+firebase=pyrebase.initialize_app(config)
+autenticacion = firebase.auth()
+db = firebase.database()
+
 
 app = Flask(__name__)
 
@@ -9,9 +15,13 @@ def format_server_time():
   return time.strftime("%I:%M:%S %p", server_time)
 
 @app.route('/')
-def index():
+def home():
     context = { 'server_time': format_server_time() }
     return render_template('index.html', context=context)
 
-if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+#if __name__ == '__main__':
+#    app.run()
