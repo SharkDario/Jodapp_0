@@ -70,6 +70,26 @@ class Firebase():
             return usuario
         except:
             return None
+    
+    def authIniciarSesionUser(self, user, contra):
+        usuarios = self.baseDeDatosTR.child("Usuarios").get()
+        correo=""
+        for usuario in usuarios.each():
+            if(usuario.val()['user']==user):
+                correo=usuario.val()['correo']
+                dni = usuario.key()
+                break
+        # Veo si realmente la contrasenna es correcta
+        if(correo!=""):
+            usuarioValido = self.authIniciarSesion(correo, contra)
+            # Esto quiere decir que el usuario inicio sesion correctamente
+            if(usuarioValido!=None):
+                print(dni)
+                #usuarioValido = self.obtenerListaDiccionarios(Usuarios, [dni])
+                #usuarioValido = usuarioValido[0]
+                return dni
+        # Esto quiere decir que no pudo iniciar sesion, user o contrasenna incorrectos
+        return False
 
     # baseDeDatosTR (DEBO USARLO DENTRO DE CLASE JODAPP)
     # El siguiente metodo se utiliza para guardar cualquier objeto en formato JSON
@@ -159,10 +179,29 @@ class Firebase():
     # baseDeDatosTR
     # El siguiente metodo se utiliza para obtener muchos objetos en base a una lista de IDs
     # En el caso de que la lista sea de un solo ID, devolvera solo un diccionario
-    def obtenerListaDiccionarios(self, tipo, listaIDs):
-        listaDiccio = self.baseDeDatosTR.child(tipo)
+    def obtenerListaDiccionarios2(self, tipo, listaIDs):
+        listaDiccio = self.baseDeDatosTR.child(tipo).get()
         # Crea un nuevo diccionario que solo contiene los elementos con los IDs deseados
         return {id: listaDiccio[id] for id in listaIDs if id in listaDiccio}
+
+    def obtenerListaDiccionarios(self, tipo, listaIDs):
+        listaDiccio = self.baseDeDatosTR.child(tipo).get()
+        listaCoincidencias = []
+        for idValor in listaIDs:
+            for diccio in listaDiccio.each():
+                if(diccio.key()==idValor):
+                    listaCoincidencias.append(diccio)
+                    break
+        return listaCoincidencias
+    #Al final no utilice este codigo
+    #listaCoincidencias = []
+    #    for idValor in listaIDs:
+    #        for diccio in listaDiccio.each():
+    #            if(diccio.key()==idValor):
+    #                listaCoincidencias.append(diccio)
+    #                break
+        # Crea un nuevo diccionario que solo contiene los elementos con los IDs deseados
+    #    return listaCoincidencias
 
     # baseDeDatosTR
     # El siguiente metodo se utiliza para eliminar un diccionario mediante el ID

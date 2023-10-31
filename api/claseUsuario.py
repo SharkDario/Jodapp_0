@@ -54,11 +54,11 @@ class Usuario(Persona):
             amigos+=amigo.mostrar()
         return amigos
     # Metodo privado para mostrar tanto los eventos Asistidos como los eventos creados
-    def __mostrarEventos(self, listaEventosBD, lista="Asistidos", evento="Eventos"):
+    def __mostrarEventos(self, listaEventosBD, lista="Asistidos", eventoNombre="Eventos"):
         # La listaEventosBD se genera desde clase Firebase mediante el atributo listaEventos o listaEventosAsistidos
         # lista puede ser Asistidos o Creados
         # evento puede ser Eventos, Fiestas, Conciertos, Matchs
-        eventos = f"Lista de {evento} {lista}"
+        eventos = f"Lista de {eventoNombre} {lista}"
         for evento in listaEventosBD:
             eventos+=evento.mostrarLista()
         return eventos

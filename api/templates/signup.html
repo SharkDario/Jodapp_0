@@ -11,11 +11,11 @@
     <div id="signupForm">
       <h2>Registro</h2>
       <h1>JodApp</h1>
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
+      {% with mensajes = get_flashed_messages() %}
+      {% if mensajes %}
         <ul class=flashes>
-        {% for message in messages %}
-          <li>{{ message }}</li>
+        {% for mensaje in mensajes %}
+          <li>{{ mensaje }}</li>
         {% endfor %}
         </ul>
       {% endif %}
