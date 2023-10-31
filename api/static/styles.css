@@ -1,0 +1,103 @@
+#context {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #039be5; 
+    font-weight: bold; 
+    font-size: 16px; 
+    margin: 0 0 8px;
+    font-family: 'Georgia', sans-serif; 
+}
+body { 
+    background: #ECEFF1; 
+    color: rgba(0,0,0,0.87); 
+    font-family: 'Georgia', sans-serif; 
+    margin: 0; 
+    padding: 0; 
+}
+#homeForm { 
+    background: white; 
+    max-width: 360px; 
+    margin: 100px auto 16px; 
+    padding: 32px 24px; 
+    border-radius: 3px; 
+}
+#homeForm h2 { 
+    color: #039be5; 
+    font-weight: bold; 
+    font-size: 16px; 
+    margin: 0 0 8px; 
+}
+#homeForm h1 { 
+    font-size: 22px; 
+    font-weight: 300; 
+    color: rgba(0,0,0,0.6); 
+    margin: 0 0 16px;
+}
+#homeForm label { 
+    line-height: 140%; 
+    margin: 16px 0 24px; 
+    font-size: 14px; 
+}
+#homeForm input { 
+    line-height: 140%; 
+    margin: 16px 0 24px; 
+    font-size: 14px; 
+}
+#homeForm form { 
+    color: #039be5; 
+    font-weight: bold; 
+    font-size: 16px; 
+    margin: 0 0 8px; 
+}
+button { 
+    display: block; text-align: center;
+     background: #039be5;
+     text-transform: uppercase;
+     text-decoration: none;
+     color: white;
+     padding: 16px;
+     border-radius: 4px;
+}
+.inputGrupo {
+    display: flex;
+    justify-content: space-between;
+}
+.inputGrupo label, .inputGrupo input {
+    width: 200px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+}
+button { 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+#pie { 
+     color:rgba(0,0,0,0.4);
+     text-align:center;
+     font-size:13px;
+}
+@media (max-width:600px) {
+     body, #homeForm {
+         margin-top :0;
+         background:white;
+         box-shadow:none;
+     }
+     body {
+         border-top :16px solid #039be5;
+     }
+}
+#loginForm { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
+#loginForm h2 { color: #039be5; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
+#loginForm h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+#loginForm label { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
+#loginForm input { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
+#loginForm #boton { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+#loginForm, #loginForm #boton { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+#signupForm { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
+#signupForm h2 { color: #039be5; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
+#signupForm h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+#signupForm label { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
+#signupForm input { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
+#signupForm #boton { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+#signupForm, #signupForm #boton { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }

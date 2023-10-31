@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bienvenido </title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div id="signupForm">
+      <h2>Registro</h2>
+      <h1>JodApp</h1>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+      {% endwith %}
+      <form method="POST", action="/registrarte">
+        <div class="inputGrupo">
+          <label for="dni">DNI:</label>
+          <input type="number" id="dni" name="dni" min="10000000"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="apellido">Apellido:</label>
+          <input type="text" id="apellido" name="apellido"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="edad">Edad:</label>
+          <input type="number" id="edad" name="edad" min="13"><br>
+        </div>
+        <div class="inputGrupo">  
+          <label for="correo">Correo:</label>
+          <input type="text" id="correo" name="correo"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="username">Usuario:</label>
+          <input type="text" id="username" name="username"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="password">Contraseña:</label>
+          <input type="password" id="password" name="password"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="password2">Repita su contraseña:</label>
+          <input type="password" id="password2" name="password2"><br>
+        </div>
+          <input id="boton" type="submit" value="Registrarte">
+      </form>
+    </div>
+    <p id="pie">Grupo 2</p>
+</body>
+</html>

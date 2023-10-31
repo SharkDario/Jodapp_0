@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "Jodapp",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
