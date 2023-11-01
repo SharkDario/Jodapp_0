@@ -144,12 +144,20 @@ class Firebase():
                 usuario.update_email(diccio['correo'])
             if(usuario=="lista"):
                 diccioViejo = self.baseDeDatosTR.child(tipo).child(idObjeto).get().val()
-                claves = diccio.keys()
+                claves = list(diccio.keys())
+                print(claves)
                 clave = claves[0]
-                listaVieja = diccioViejo[clave]
-                listaVieja.append(diccio[clave])
-                diccioViejo[clave] = listaVieja
-                diccio = diccioViejo
+                try:
+                    # En este caso existe la lista en el diccionario
+                    listaVieja = diccioViejo[clave]
+                    listaVieja.append(diccio[clave])
+                    diccioViejo[clave] = listaVieja
+                    diccio = diccioViejo
+                except Exception:
+                    # En este caso aun no, entonces la creamos
+                    listaNueva = [diccio[clave]]
+                    diccioViejo[clave] = listaNueva
+                    diccio = diccioViejo
             self.baseDeDatosTR.child(tipo).child(idObjeto).update(diccio)
         # Si es True quiere decir que se modifico
         # Si es False quiere decir que no se pudo modificar pq era igual a uno ya existente en el caso de user y correo
@@ -163,8 +171,10 @@ class Firebase():
         #True quiere decir que logra cambiarse, False que no pudo pq es igual a uno existente
         idCambiado = self.__validacionIDDistinto(tipo, idNuevo)
         if(idCambiado):
-            referencia = self.baseDeDatosTR.child(tipo).child(idObjeto)
-            referencia.set(idNuevo)
+            referenciaVieja = self.baseDeDatosTR.child(tipo).child(idObjeto)
+            datos = referenciaVieja.get().val()
+            self.baseDeDatosTR.child(tipo).child(idObjeto).remove()
+            self.baseDeDatosTR.child(tipo).child(idNuevo).set(datos)
             #ID cambiado con exito
         return idCambiado
     
@@ -175,14 +185,27 @@ class Firebase():
     #def obtenerDiccionario(self, tipo, idObjeto):
     #    return self.__baseDeDatosTR.child(tipo).child(idObjeto).get()
     
+    # baseDeDatosTR
+    # Mediante este metodo se obtiene el ID del objeto recien creado
+    # Primero se debe pasar como argumento al objeto convertido en diccionario
+    # Tambien la seccion que podria ser Fiestas, Conciertos, etc
+    def obtenerID(self, diccio, tipo):
+        listaDiccio = self.baseDeDatosTR.child(tipo).get().val()
+
+        for clave in listaDiccio:
+            if listaDiccio[clave] == diccio:
+                return clave
+        return None
+
+
 
     # baseDeDatosTR
     # El siguiente metodo se utiliza para obtener muchos objetos en base a una lista de IDs
     # En el caso de que la lista sea de un solo ID, devolvera solo un diccionario
-    def obtenerListaDiccionarios2(self, tipo, listaIDs):
-        listaDiccio = self.baseDeDatosTR.child(tipo).get()
+    #def obtenerListaDiccionarios2(self, tipo, listaIDs):
+    #    listaDiccio = self.baseDeDatosTR.child(tipo).get()
         # Crea un nuevo diccionario que solo contiene los elementos con los IDs deseados
-        return {id: listaDiccio[id] for id in listaIDs if id in listaDiccio}
+    #    return {id: listaDiccio[id] for id in listaIDs if id in listaDiccio}
 
     def obtenerListaDiccionarios(self, tipo, listaIDs):
         listaDiccio = self.baseDeDatosTR.child(tipo).get()
@@ -213,6 +236,7 @@ class Firebase():
         if(tipo=="Usuarios"):
             #diccio = self.obtenerDiccionario(tipo, idObjeto)
             diccio = self.obtenerListaDiccionarios(tipo, [idObjeto])
+            diccio = diccio[0]
             # Como la contrasenna no se guarda en la base de datos, se debe pasar como argumento
             userFire = self.authIniciarSesion(diccio['correo'], contra)
             self.autenticacion.delete_user_account(userFire['idToken'])
@@ -228,5 +252,6 @@ class Firebase():
         diccionario = self.baseDeDatosTR.child(tipo).child(idObjeto).get().val()
         # Se elimina el ID de la lista
         diccionario[claveLista].remove(idEliminar)
+        print(diccionario[claveLista])
         # Se vuelve a guardar el diccionario nuevo
         self.baseDeDatosTR.child(tipo).child(idObjeto).set(diccionario)

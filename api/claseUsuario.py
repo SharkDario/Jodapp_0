@@ -23,7 +23,19 @@ class Usuario(Persona):
     
     def getAsistencias(self):
         return self.__listaEventosAsistidos
-    
+    # Polimorfismo
+    def setDNI(self, valor, firebase):
+        super().setDNI(valor, firebase, "Usuarios")
+    # Polimorfismo
+    def setNombre(self, valor, firebase):
+        super().setNombre(valor, firebase, "Usuarios")
+    # Polimorfismo
+    def setApellido(self, valor, firebase):
+        super().setApellido(valor, firebase, "Usuarios")
+    #Polimorfismo
+    def setEdad(self, valor, firebase):
+        super().setEdad(valor, firebase, "Usuarios")
+
     def setCorreo(self, valor, firebase, userAuth):
         # Si se cambio en la bd quiere decir que era un correo distinto a uno existente, y devuelve True
         if(firebase.editarAtributos("Usuarios", self.getDNI(), {'correo': valor}, userAuth)):
@@ -46,18 +58,18 @@ class Usuario(Persona):
         if(firebase.editarAtributos("Usuarios", self.getDNI(), {'listaEventosAsistidos':idEvento}, "lista")):
             self.__listaEventosAsistidos.append(idEvento)
 
-    #Metodos privados para mostrar los amigos, fiestas asistidas, y fiestas creadas
-    def __mostrarAmigos(self, listaAmigosBD):
+    #Metodos publicos para mostrar los amigos, fiestas asistidas, y fiestas creadas
+    def mostrarAmigos(self, listaAmigosBD):
         # La listaAmigosBD se genera desde clase Firebase mediante el atributo listaAmigos de la clase Usuario
         amigos="Lista de amigos:\n"
         for amigo in listaAmigosBD:
             amigos+=amigo.mostrar()
         return amigos
     # Metodo privado para mostrar tanto los eventos Asistidos como los eventos creados
-    def __mostrarEventos(self, listaEventosBD, lista="Asistidos", eventoNombre="Eventos"):
+    def mostrarEventos(self, listaEventosBD, lista="Asistidos", eventoNombre="Eventos"):
         # La listaEventosBD se genera desde clase Firebase mediante el atributo listaEventos o listaEventosAsistidos
         # lista puede ser Asistidos o Creados
-        # evento puede ser Eventos, Fiestas, Conciertos, Matchs
+        # eventoNombre puede ser Eventos, Fiestas, Conciertos, Matchs
         eventos = f"Lista de {eventoNombre} {lista}"
         for evento in listaEventosBD:
             eventos+=evento.mostrarLista()
@@ -74,6 +86,7 @@ class Usuario(Persona):
             # Antes se debe eliminar de la bd
             # tipo puede ser Fiestas, Conciertos, Matchs
             firebase.eliminarDiccionario(tipo, idEvento)
+            firebase.eliminarID("Usuarios", self.getDNI(), 'listaEventos', idEvento)
             self.__listaEventos.remove(idEvento)
 
     def eliminarAsistencia(self, tipo, idEvento, firebase):

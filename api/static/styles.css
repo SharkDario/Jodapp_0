@@ -69,6 +69,28 @@ button {
     display: inline-block;
     vertical-align: middle;
 }
+.selectGrupo {
+    display: flex;
+    justify-content: space-between;
+}
+.selectGrupo select {
+    display: inline-block;
+    background: #039be5;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+}
+select { 
+    display: inline-block;
+    background: #039be5;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+}
 button { 
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
@@ -86,6 +108,42 @@ button {
      body {
          border-top :16px solid #039be5;
      }
+}
+#crearEventoForm { 
+    display: inline-block;
+    background: white; 
+    max-width: 800px; 
+    margin: 50px 100px 16px; 
+    padding: 32px 24px; 
+    border-radius: 3px; 
+}
+#crearEventoForm h2 { 
+    color: #039be5; 
+    font-weight: bold; 
+    font-size: 16px; 
+    margin: 0 0 8px; 
+}
+#crearEventoForm h1 { 
+    font-size: 22px; 
+    font-weight: 300; 
+    color: rgba(0,0,0,0.6); 
+    margin: 0 0 16px;
+}
+#crearEventoForm label { 
+    line-height: 140%; 
+    margin: 16px 0 24px; 
+    font-size: 14px; 
+}
+#crearEventoForm input { 
+    line-height: 140%; 
+    margin: 16px 0 24px; 
+    font-size: 14px; 
+}
+#crearEventoForm form { 
+    color: #039be5; 
+    font-weight: bold; 
+    font-size: 16px; 
+    margin: 0 0 8px; 
 }
 #loginForm { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
 #loginForm h2 { color: #039be5; font-weight: bold; font-size: 16px; margin: 0 0 8px; }

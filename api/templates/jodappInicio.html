@@ -24,18 +24,26 @@
       {% endif %}
       {% endwith %}
       <img src="static/logo.jpeg" alt="" width="300" height="300">
-      <form action="/crearEvento" method="post">
-        <select name="tipoEvento">
-          <option value="fiesta">Fiesta</option>
-          <option value="concierto">Concierto</option>
-          <option value="match">Match</option>
-        </select>
+      <form action="/creacionEvento" method="post">
+        <input type="hidden" name="usuario" value=context.usuario>
+        <input type="hidden" name="usuarioObjeto" value=context.usuarioObjeto>
+        <div class="selectGrupo">
         <button type="submit">Crear Evento</button>
+        <select name="tipoEvento">
+          <option value="Fiesta">Fiesta</option>
+          <option value="Concierto">Concierto</option>
+          <option value="Match">Match</option>
+        </select>
+        </div>
       </form>
       <form action="/verListaEventos" method="post">
+        <input type="hidden" name="usuario" value=context.usuario>
+        <input type="hidden" name="usuarioObjeto" value=context.usuarioObjeto>
         <button type="submit">Ver listas de eventos</button>
       </form>
       <form action="/verListaDeSusEventos" method="post">
+        <input type="hidden" name="usuario" value=context.usuario>
+        <input type="hidden" name="usuarioObjeto" value=context.usuarioObjeto>
         <button type="submit">Ver listas de sus eventos</button>
       </form>
     </div>
