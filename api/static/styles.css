@@ -2,60 +2,136 @@
     position: absolute;
     top: 0;
     right: 0;
-    color: #039be5; 
+    color: #2B3499; 
     font-weight: bold; 
     font-size: 16px; 
     margin: 0 0 8px;
-    font-family: 'Georgia', sans-serif; 
+    font-family: 'Open Sans', sans-serif; 
 }
 body { 
-    background: #ECEFF1; 
+    background: #2B3499; 
     color: rgba(0,0,0,0.87); 
-    font-family: 'Georgia', sans-serif; 
+    font-family: 'Open Sans', sans-serif; 
     margin: 0; 
     padding: 0; 
 }
+#graficoForm { 
+    background: #FFEED9;
+    border-radius: 3px;
+    max-width: 700px;
+    margin: 100px auto 16px; 
+    padding: 32px 24px; 
+    border-radius: 3px;
+    display: inline-block;
+    position: relative;
+    top: 50px;
+    left: 50px;
+    font-family: 'Open Sans', sans-serif;
+}
+#tableForm { 
+    background: #FFEED9;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px 20px;
+    border-radius: 3px;
+    display: inline-block;
+    position: relative;
+    top: 50px;
+    left: 50px;
+    font-family: 'Open Sans', sans-serif;
+}
+#tableForm h1 { 
+    font-size: 22px; 
+    font-weight: 300; 
+    color: rgba(0,0,0,0.6);
+    font-family: 'Open Sans', sans-serif;  
+    margin: 0 0 16px;
+}
+#tableForm h2 { 
+    color: #2B3499; 
+    font-weight: bold; 
+    font-family: 'Open Sans', sans-serif; 
+    font-size: 16px; 
+    margin: 0 0 8px; 
+}
+#tableForm table {
+    background: #FF6C22;
+    border-radius: 3px;
+    color: #2B3499;
+    font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    width: 100%;
+    margin: 0;
+    padding: 0px 0px;
+    border: 1px solid #2B3499;
+    table-layout: fixed;
+}
+#tableForm table td, table th {
+    text-align: left;
+    border: 1px solid #2B3499;
+    padding: 10px 10px 10px 10px;
+    width: 60px;
+}
+#tableForm input { 
+    text-align: left;
+    display: block;
+    background: #2B3499;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #FFEED9;
+    font-family: 'Open Sans', sans-serif; 
+    font-size: 10px;
+    padding: 4px;
+    border-radius: 8px;
+}
 #homeForm { 
-    background: white; 
+    background: #FFEED9; 
     max-width: 360px; 
     margin: 100px auto 16px; 
     padding: 32px 24px; 
     border-radius: 3px; 
 }
 #homeForm h2 { 
-    color: #039be5; 
+    color: #2B3499; 
     font-weight: bold; 
+    font-family: 'Open Sans', sans-serif; 
     font-size: 16px; 
     margin: 0 0 8px; 
 }
 #homeForm h1 { 
     font-size: 22px; 
     font-weight: 300; 
-    color: rgba(0,0,0,0.6); 
+    color: rgba(0,0,0,0.6);
+    font-family: 'Open Sans', sans-serif;  
     margin: 0 0 16px;
 }
 #homeForm label { 
     line-height: 140%; 
     margin: 16px 0 24px; 
+    font-family: 'Open Sans', sans-serif; 
     font-size: 14px; 
 }
 #homeForm input { 
     line-height: 140%; 
     margin: 16px 0 24px; 
+    font-family: 'Open Sans', sans-serif; 
     font-size: 14px; 
 }
 #homeForm form { 
-    color: #039be5; 
-    font-weight: bold; 
+    color: #2B3499; 
+    font-weight: bold;
+    font-family: 'Open Sans', sans-serif;  
     font-size: 16px; 
     margin: 0 0 8px; 
 }
 button { 
     display: block; text-align: center;
-     background: #039be5;
+     background: #FF6C22;
      text-transform: uppercase;
      text-decoration: none;
-     color: white;
+     color: #FFEED9;
+     font-family: 'Open Sans', sans-serif; 
      padding: 16px;
      border-radius: 4px;
 }
@@ -75,19 +151,21 @@ button {
 }
 .selectGrupo select {
     display: inline-block;
-    background: #039be5;
+    background: #2B3499;
     text-transform: uppercase;
     text-decoration: none;
-    color: white;
+    color: #FFEED9;
+    font-family: 'Open Sans', sans-serif; 
     padding: 5px;
     border-radius: 4px;
 }
 select { 
     display: inline-block;
-    background: #039be5;
+    background: #2B3499;
     text-transform: uppercase;
     text-decoration: none;
-    color: white;
+    color: #FFEED9;
+    font-family: 'Open Sans', sans-serif; 
     padding: 5px;
     border-radius: 4px;
 }
@@ -102,60 +180,66 @@ button {
 @media (max-width:600px) {
      body, #homeForm {
          margin-top :0;
-         background:white;
+         background:#FFEED9;
          box-shadow:none;
      }
      body {
-         border-top :16px solid #039be5;
+         border-top :16px solid #2B3499;
      }
 }
 #crearEventoForm { 
     display: inline-block;
-    background: white; 
+    background: #FFEED9; 
     max-width: 800px; 
-    margin: 50px 100px 16px; 
+    margin: 50px 20px 16px;
+    font-family: 'Open Sans', sans-serif;  
     padding: 32px 24px; 
     border-radius: 3px; 
 }
 #crearEventoForm h2 { 
-    color: #039be5; 
+    color: #2B3499; 
     font-weight: bold; 
+    font-family: 'Open Sans', sans-serif; 
     font-size: 16px; 
     margin: 0 0 8px; 
 }
 #crearEventoForm h1 { 
     font-size: 22px; 
     font-weight: 300; 
+    font-family: 'Open Sans', sans-serif; 
     color: rgba(0,0,0,0.6); 
     margin: 0 0 16px;
 }
 #crearEventoForm label { 
     line-height: 140%; 
     margin: 16px 0 24px; 
+    font-family: 'Open Sans', sans-serif; 
     font-size: 14px; 
 }
 #crearEventoForm input { 
     line-height: 140%; 
-    margin: 16px 0 24px; 
+    margin: 16px 0 24px;
+    font-family: 'Open Sans', sans-serif;  
     font-size: 14px; 
 }
 #crearEventoForm form { 
-    color: #039be5; 
+    color: #2B3499; 
     font-weight: bold; 
     font-size: 16px; 
+    font-family: 'Open Sans', sans-serif; 
     margin: 0 0 8px; 
 }
-#loginForm { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-#loginForm h2 { color: #039be5; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
+#loginForm { background: #FFEED9; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
+#loginForm h2 { color: #2B3499; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
 #loginForm h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
 #loginForm label { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
 #loginForm input { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-#loginForm #boton { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+#loginForm #boton { display: block; text-align: center; background: #2B3499; text-transform: uppercase; text-decoration: none; color: #FFEED9; padding: 16px; border-radius: 4px; }
 #loginForm, #loginForm #boton { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-#signupForm { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-#signupForm h2 { color: #039be5; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
+#signupForm { background: #FFEED9; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
+#signupForm h2 { color: #2B3499; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
 #signupForm h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
 #signupForm label { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
 #signupForm input { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-#signupForm #boton { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+#signupForm #boton { display: block; text-align: center; background: #2B3499; text-transform: uppercase; text-decoration: none; color: #FFEED9; padding: 16px; border-radius: 4px; }
 #signupForm, #signupForm #boton { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
