@@ -9,13 +9,6 @@ class Fiesta(Evento):
         self.__conservadora = kwargs.get('conservadora')
         self.__categoria = kwargs.get('categoria')
         self.__bandas = kwargs.get('bandas', [])
-    #def __init__(self, nombre, fecha, ubicacion, precio, descripcion, anfitrion, fechaFin, capacidad, rango, vestimenta, bar, conservadora, categoria, bandas=[]):
-    #    super().__init__(nombre, fecha, ubicacion, precio, descripcion, anfitrion, fechaFin, capacidad, rango)
-    #    self.__vestimenta = vestimenta
-    #    self.__bar = bar
-    #    self.__conservadora = conservadora
-    #    self.__categoria = categoria
-    #    self.__bandas = bandas
 
     def getVestimenta(self):
         return self.__vestimenta
@@ -33,10 +26,6 @@ class Fiesta(Evento):
         return self.__bandas
     
     #### Polimorfismo ####
-
-    #def setID(self, firebase, diccio):
-    #    diccio = self.objetoToDiccionario()
-    #    super().setID(firebase, diccio, "Fiestas")
     
     def setNombre(self, valor, firebase):
         super().setNombre(valor, firebase, "Fiestas")
@@ -92,6 +81,13 @@ class Fiesta(Evento):
         if(firebase.editarAtributos("Fiestas", self.getID(), {'bandas': valor}, "lista")):
             self.__bandas.append(valor)
 
+    def __mostrarBandas(self):
+        bandas=""
+        for banda in self.__bandas:
+            #Aqui se recorre la base de datos para ver cuales coinciden con el ID
+            bandas+=f"{banda.mostrar()}\n"
+        return bandas
+
     def eliminarBanda(self, idBanda, firebase):
         if idBanda in self.__bandas:
             # Antes se debe eliminar de la bd
@@ -102,13 +98,6 @@ class Fiesta(Evento):
     #Polimorfismo
     def eliminarAsistente(self, idValor, firebase):
         super().eliminarAsistente(idValor, firebase, "Fiestas")
-
-    def __mostrarBandas(self):
-        bandas=""
-        for banda in self.__bandas:
-            #Aqui se recorre la base de datos para ver cuales coinciden con el ID
-            bandas+=f"{banda.mostrar()}\n"
-        return bandas
 
     def mostrar(self):
         datosFiesta = super().mostrar()

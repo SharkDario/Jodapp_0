@@ -22,26 +22,6 @@ class Evento():
         self.__capacidad = kwargs.get('capacidad')
         self.__capacidad = int(self.__capacidad)
         self.__rango = kwargs.get('rango')
-    #def __init__(self, nombre, fecha, ubicacion, precio, descripcion, anfitrion, fechaFin, capacidad, rango, asistentes=[]):
-        # El ID se genera desde la base de datos de Firebase al guardar el objeto,
-        # Con el metodo setID se guarda el valor del ID
-    #    self.__id=""
-    #    self.__nombre = nombre
-    #    self.__fecha = fecha
-        # Una instancia de la clase Ubicacion
-        # Es una relacion de composicion con Evento siendo contenedora, y Ubicacion contenida
-        # El parametro ubicacion es una lista con los argumentos necesarios de latitud, longitud y descripcion
-    #    self.__ubicacion = Ubicacion(ubicacion[0], ubicacion[1], ubicacion[2])
-    #    self.__precio = precio
-    #    self.__descripcion = descripcion
-    #    self.__anfitrion = anfitrion
-        # Si el objeto se crea por primera vez sera una lista vacia
-        # En cambio, si ya existe en la base de datos
-        # se pasara la lista con los IDs de los asistentes
-    #    self.__asistentes = asistentes
-    #    self.__fechaFin = fechaFin
-    #    self.__capacidad = capacidad
-    #    self.__rango = rango
 
     def getID(self):
         return self.__id
@@ -78,11 +58,6 @@ class Evento():
     
     def setID(self, valor):
         self.__id = valor
-
-    #def setID(self, firebase, diccio, tipo):
-    #    valor = firebase.obtenerID(diccio, tipo)
-    #    if(valor is not None):
-    #        self.__id = valor
     
     def setNombre(self, valor, firebase, tipo):
         if(firebase.editarAtributos(tipo, self.getID(), {'nombre': valor})):

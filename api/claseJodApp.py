@@ -5,16 +5,14 @@ from claseUsuario import Usuario
 from claseFiesta import Fiesta
 from claseBanda import Banda
 from claseArtista import Artista
-from claseJugador import Jugador
-from claseEquipo import Equipo
+#from claseJugador import Jugador
+#from claseEquipo import Equipo
 import matplotlib.pyplot as plt
 import io, base64
-import matplotlib.figure as figure
-import matplotlib.backends.backend_agg as backend_agg
+#import matplotlib.figure as figure
+#import matplotlib.backends.backend_agg as backend_agg
 import matplotlib
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-#from claseConcierto import Concierto
-#from claseMatch import Match
+#from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import time
 
 class JodApp:
@@ -40,6 +38,22 @@ class JodApp:
         self.app.route('/verFiesta', methods=['POST'])(self.verFiesta)
         self.app.route('/accionEvento', methods=['POST'])(self.accionEvento)
     
+    def __formatoServidorTiempo(self):
+        servidorTiempo = time.localtime()
+        return time.strftime("%I:%M:%S %p", servidorTiempo)
+
+    # Objetos para el HTML
+    def __listaDatosEventos(self, listaEventosObjetos):
+        listaDatosEventos = []
+        for evento in listaEventosObjetos:
+            idEvento = evento.getID()
+            cadena = evento.mostrarLista()
+            listaEvento = cadena.split("$&$")
+            # Esto servira para ser mostrado en el html
+            listaEvento.insert(0, idEvento)
+            listaDatosEventos.append(listaEvento)
+        return listaDatosEventos
+
     def __graficoBarrasMasAsistentes(self, listaOrdenada):
         plt.figure()
         # listaOrdenada es una lista de diccionarios que alberga 'c'=cant de asistentes 'f'=nombre de la fiesta
@@ -83,6 +97,50 @@ class JodApp:
         # objeto de io.BytesIO que contiene los datos de la imagen
         imagenCodificada = base64.b64encode(output.getvalue()).decode('utf-8')
         return imagenCodificada
+    
+    def __obtenerDictConIds(self, listaDictPyre, clave):
+        listaDict = []
+        for dictPyre in listaDictPyre:
+            dictNuevo = dictPyre.val()
+            dictNuevo[clave] = dictPyre.key()
+            listaDict.append(dictNuevo)
+        return listaDict
+    
+    def __crearObjetosArtista(self, listaDict):
+        listaArtista = []
+        for diccio in listaDict:
+            artistaNuevo = Artista(**diccio)
+            listaArtista.append(artistaNuevo)
+        return listaArtista
+    
+    def __crearObjetosBanda(self, listaDict):
+        listaBanda = []
+        for diccio in listaDict:
+            print(diccio['integrantes'])
+            #artistas = self.firebase.obtenerListaDiccionarios('Artistas', diccio['integrantes'])
+            #listaArtista = self.__crearObjetosArtista(artistas)
+            #diccio['integrantes'] = listaArtista
+            listaArtista = []
+            for integrante in diccio['integrantes']:
+                artista = Artista(**integrante)
+                listaArtista.append(artista)
+            diccio['integrantes'] = listaArtista
+            bandaNueva = Banda(**diccio)
+            listaBanda.append(bandaNueva)
+        return listaBanda
+
+    def __crearObjetosFiesta(self, listaDict):
+        listaFiesta = []
+        for diccio in listaDict:
+            if 'bandas' in diccio:
+                #flash(diccio['bandas'])
+                bandas = self.firebase.obtenerListaDiccionarios('Bandas', diccio['bandas'])
+                #flash(bandas)
+                listaBanda = self.__crearObjetosBanda(bandas)
+                diccio['bandas'] = listaBanda
+            fiestaNueva = Fiesta(**diccio)
+            listaFiesta.append(fiestaNueva)
+        return listaFiesta
 
     def accionEvento(self):
         accion = request.form.get('accion')
@@ -304,50 +362,6 @@ class JodApp:
         return render_template('jodappCrearEvento.html', context=context)
 
 
-    def __obtenerDictConIds(self, listaDictPyre, clave):
-        listaDict = []
-        for dictPyre in listaDictPyre:
-            dictNuevo = dictPyre.val()
-            dictNuevo[clave] = dictPyre.key()
-            listaDict.append(dictNuevo)
-        return listaDict
-    
-    def __crearObjetosArtista(self, listaDict):
-        listaArtista = []
-        for diccio in listaDict:
-            artistaNuevo = Artista(**diccio)
-            listaArtista.append(artistaNuevo)
-        return listaArtista
-    
-    def __crearObjetosBanda(self, listaDict):
-        listaBanda = []
-        for diccio in listaDict:
-            print(diccio['integrantes'])
-            #artistas = self.firebase.obtenerListaDiccionarios('Artistas', diccio['integrantes'])
-            #listaArtista = self.__crearObjetosArtista(artistas)
-            #diccio['integrantes'] = listaArtista
-            listaArtista = []
-            for integrante in diccio['integrantes']:
-                artista = Artista(**integrante)
-                listaArtista.append(artista)
-            diccio['integrantes'] = listaArtista
-            bandaNueva = Banda(**diccio)
-            listaBanda.append(bandaNueva)
-        return listaBanda
-
-    def __crearObjetosFiesta(self, listaDict):
-        listaFiesta = []
-        for diccio in listaDict:
-            if 'bandas' in diccio:
-                #flash(diccio['bandas'])
-                bandas = self.firebase.obtenerListaDiccionarios('Bandas', diccio['bandas'])
-                #flash(bandas)
-                listaBanda = self.__crearObjetosBanda(bandas)
-                diccio['bandas'] = listaBanda
-            fiestaNueva = Fiesta(**diccio)
-            listaFiesta.append(fiestaNueva)
-        return listaFiesta
-
     def crearBanda(self):
         diccioDatos = request.form.to_dict()
         
@@ -431,18 +445,6 @@ class JodApp:
         evento = request.form['tipoEvento']
         self.creacionEvento(evento)
 
-    def __obtenerUsuarioDictObj(self):
-        # Obtenemos el usuario diccionario
-        usuarioDict = request.form['usuario']
-        # Obtenemos el usuario objeto
-        usuarioObj = request.form['usuarioObjeto']
-        return [usuarioDict, usuarioObj]
-
-    def __contextLista(self):
-        listaDictObj = self.__obtenerUsuarioDictObj()
-        context = { 'server_time': self.__formatoServidorTiempo(), 'usuarioDict':listaDictObj[0], 'usuarioObj':listaDictObj[1]}
-        return context
-
     # Serian los eventos creados y eventos asistidos del usuario
     def verListaDeSusEventos(self):
         dni = request.form['dni']
@@ -473,25 +475,8 @@ class JodApp:
         listaObjMatchsAsis = self.__crearObjetosFiesta(listaMatchsAsis)
         listaDatosMatchsAsis = self.__listaDatosEventos(listaObjMatchsAsis)
 
-        #for fiesta in listaObjFiestas:
-        #    flash(fiesta.mostrar())
-        #    break
-
-        #flash(listaFiestas)
         context = { 'server_time': self.__formatoServidorTiempo(), 'dni':dni, 'listasFiestas':listaDatosFiestas, 'listasFiestasAsis':listaDatosFiestasAsis}
         return render_template('jodappListaDeSusEventos.html', context=context)
-    
-    # Objetos para el HTML
-    def __listaDatosEventos(self, listaEventosObjetos):
-        listaDatosEventos = []
-        for evento in listaEventosObjetos:
-            idEvento = evento.getID()
-            cadena = evento.mostrarLista()
-            listaEvento = cadena.split("$&$")
-            # Esto servira para ser mostrado en el html
-            listaEvento.insert(0, idEvento)
-            listaDatosEventos.append(listaEvento)
-        return listaDatosEventos
     
     # Serian todos los eventos que existen
     def verListaEventos(self):
@@ -550,45 +535,8 @@ class JodApp:
         dni = request.form.get('dni')
         context = { 'server_time': self.__formatoServidorTiempo(), 'dni':dni, 'usuario':usuario, 'usuarioObjeto':usuarioObjeto, 'evento':eventoSeleccionado, 'dictGrupo':dictGrupo, 'dictPerso': dictPerso }
         return render_template('jodappCrearEvento.html', context=context)
-
-    def __formatoServidorTiempo(self):
-        servidorTiempo = time.localtime()
-        return time.strftime("%I:%M:%S %p", servidorTiempo)
     
     def home(self):
-        # PRUEBAS #
-        #usuarioObjeto = Usuario(41414888, "Miguel Dario", "Coronel", "25", "mdarioc1998@gmail.com", "Dario07")
-        #usuarioValido = self.firebase.authIniciarSesionUser("Dario07", "A123456789B")
-        #authIniciarSesionUser devuelve el dni
-        #usuarioValido = self.firebase.obtenerListaDiccionarios("Usuarios", [usuarioValido])
-        #usuarioValido = usuarioValido[0]
-        # usuarioValido seria el usuario de tipo diccionario
-        #usuarioDiccio = usuarioValido.val()
-        #print(usuarioDiccio)
-
-        #usuarioObjeto = Usuario(41414888, "Miguel Dario", "Coronel", "25", "mdarioc1998@gmail.com", "Dario07", listaEventos, listaAmigos, listaEAsis)
-        # Por si la cago para volver a guardarlo
-        #usuarioDiccio = usuarioObjeto.objetoToDiccionario()
-        #usuarioValido = self.firebase.guardarDiccionario("Usuarios", usuarioDiccio, 40000000)
-                
-        #usuarioValido = self.firebase.authIniciarSesionUser("Dario07", "A123456789B")
-        #usuarioObjeto.setNombre("Miguel Dario", self.firebase)
-        #self.firebase.eliminarID("Usuarios", 41414888, 'listaEventos', 'dfdsfe34243')
-        #usuarioObjeto.eliminarEvento("Fiestas", "dfdsfe34243", self.firebase)
-
-        #usuarioObjeto.setAmigo(10000001, self.firebase)
-        #usuarioObjeto2 = Usuario(10000001, "Azul Yanel", "Coronel", "20", "coro", "Azu14")
-        #usuarioObjeto2.setAmigo(41414888, self.firebase)
-
-        #usuarioObjeto.eliminarAmigo(10000001, self.firebase)
-        #usuarioObjeto2.eliminarAmigo(41414888, self.firebase)
-        #usuarioObjeto.eliminarAmigo(10000001, self.firebase)
-        #usuarioObjeto.setEdad("25", self.firebase)
-        #usuarioObjeto.setDNI(41414888, self.firebase)
-        ############    ######
-        #lista = (self.firebase.obtenerListaDiccionarios("Artistas", ["10000004", "10000005"]))
-        #print(lista[0].key())
-        #print(lista[1].val()) 1234
         context = { 'server_time': self.__formatoServidorTiempo() }
         return render_template('index.html', context=context)
 

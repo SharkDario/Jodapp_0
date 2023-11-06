@@ -9,15 +9,6 @@ class Usuario(Persona):
         self.__listaAmigos = kwargs.get('listaAmigos', [])
         self.__listaEventosAsistidos = kwargs.get('listaEventosAsistidos', [])
 
-
-    #def __init__(self, dni, nombre, apellido, edad, correo, user, listaEventos=[], listaAmigos=[], listaEventosAsistidos=[]):
-    #    super().__init__(dni, nombre, apellido, edad)
-    #    self.__correo = correo
-    #    self.__user = user
-    #    self.__listaEventos = listaEventos
-    #    self.__listaAmigos = listaAmigos
-    #    self.__listaEventosAsistidos = listaEventosAsistidos
-
     def getCorreo(self):
         return self.__correo
     

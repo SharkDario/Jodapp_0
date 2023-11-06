@@ -5,10 +5,6 @@ class Artista(Persona):
         super().__init__(**kwargs)
         self.__talento = kwargs.get('talento')
 
-    #def __init__(self, dni, nombre, apellido, edad, talento):
-    #    super().__init__(dni, nombre, apellido, edad)
-    #    self.__talento = talento
-
     def getTalento(self):
         return self.__talento
     

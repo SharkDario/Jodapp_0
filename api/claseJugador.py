@@ -5,10 +5,6 @@ class Jugador(Persona):
         super().__init__(**kwargs)
         self.__posicion = kwargs.get('posicion')
 
-    #def __init__(self, dni, nombre, apellido, edad, posicion):
-    #    super().__init__(dni, nombre, apellido, edad)
-    #    self.__posicion = posicion
-
     def getPosicion(self):
         return self.__posicion
     
