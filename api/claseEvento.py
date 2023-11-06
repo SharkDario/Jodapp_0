@@ -1,4 +1,5 @@
 from claseUbicacion import Ubicacion
+# Define una nueva clase llamada Evento
 class Evento():
     def __init__(self, **kwargs):
         # El ID se genera desde la base de datos de Firebase al guardar el objeto,
@@ -23,6 +24,8 @@ class Evento():
         self.__capacidad = int(self.__capacidad)
         self.__rango = kwargs.get('rango')
 
+
+    # Getters para obtener atributos del evento
     def getID(self):
         return self.__id
     
@@ -55,8 +58,9 @@ class Evento():
     
     def getRango(self):
         return self.__rango
-    
-    def setID(self, valor):
+
+    # Setters para establecer atributos del evento
+     def setID(self, valor):
         self.__id = valor
     
     def setNombre(self, valor, firebase, tipo):
@@ -100,6 +104,7 @@ class Evento():
         if(firebase.editarAtributos(tipo, self.getID(), {'rango': valor})):
             self.__rango = valor
 
+# Método privado para obtener la capacidad actual
     def __capacidadActual(self):
         return self.__capacidad-self.cantidadAsistentes()
 
@@ -108,6 +113,7 @@ class Evento():
     def cantidadAsistentes(self):
         return int(len(self.__asistentes))
 
+#    # Método para eliminar un asistente del evento
     def eliminarAsistente(self, idValor, firebase, tipo):
         if idValor in self.__asistentes:
             # Antes se debe eliminar de la bd
@@ -121,7 +127,8 @@ class Evento():
     #Datos generales
     def mostrarLista(self):
         return f"{self.__nombre}$&${self.__fecha}$&${self.__fechaFin}$&${self.__precio}$&${self.__capacidad}$&${self.__capacidadActual()}$&${self.cantidadAsistentes()}$&${self.__rango}"
-    
+        
+    # Método para mostrar la lista de asistentes del evento con información de usuarios 
     def mostrarAsistentes(self, usuarios):
         cadenaAsistentes = "Asistentes\n"
         for asistente in self.__asistentes:
@@ -132,7 +139,8 @@ class Evento():
     #Datos especificos
     def mostrar(self):
         return f"Nombre: {self.__nombre}\nFecha: {self.__fecha}\nFecha fin: {self.__fechaFin}\nPrecio: ${self.__precio}\nCapacidad: {self.__capacidad}\nCapacidad actual: {self.__capacidadActual()}\nCantidad de asistentes: {self.cantidadAsistentes()}\nRango: {self.__rango}"
-    
+
+    # Método para convertir el objeto Evento en un diccionario
     def objetoToDiccionario(self):
         # Se convierte en una lista para poder usarla luego cuando se deba crear otra vez el evento
         ubicacion = [self.__ubicacion.getLatitud(), self.__ubicacion.getLongitud(), self.__ubicacion.getDescripcion()]
