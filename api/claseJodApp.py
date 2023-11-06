@@ -18,7 +18,6 @@ import time
 class JodApp:
     def __init__(self):
         self.firebase = Firebase()
-        self.context = { 'server_time': self.__formatoServidorTiempo() }
         self.app = Flask(__name__)
         self.app.secret_key = "holaMundo"
         self.app.route('/')(self.home)
@@ -505,6 +504,7 @@ class JodApp:
         # Para evitarnos errores porque generamos graficos desde el servidor
         matplotlib.use('Agg')
         imagenCodificadaTorta = self.__graficoTortaMasAsistentes(listaOrdenada)
+        matplotlib.use('Agg')
         imagenCodificadaBarras = self.__graficoBarrasMasAsistentes(listaOrdenada)
         context = { 'server_time': self.__formatoServidorTiempo(), 'dni':dni, 'listasFiestas':listaDatosFiestas, 'graficoTorta':imagenCodificadaTorta, 'graficoBarra': imagenCodificadaBarras}
         return render_template('jodappListaEventos.html', context=context)
@@ -642,8 +642,3 @@ class JodApp:
 
     def run(self):
         self.app.run(debug=True)
-
-                
-
-if __name__ == '__main__':
-    JodApp().run()

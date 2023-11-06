@@ -179,13 +179,6 @@ class Firebase():
         return idCambiado
     
     # baseDeDatosTR
-    # El siguiente metodo se utiliza para obtener un objeto
-    # Con tipo se especifica en que seccion se encuentra el diccionario a ver, por ejemplo Usuarios
-    # Con idObjeto se especifica que objeto se vera
-    #def obtenerDiccionario(self, tipo, idObjeto):
-    #    return self.__baseDeDatosTR.child(tipo).child(idObjeto).get()
-    
-    # baseDeDatosTR
     # Mediante este metodo se obtiene el ID del objeto recien creado
     # Primero se debe pasar como argumento al objeto convertido en diccionario
     # Tambien la seccion que podria ser Fiestas, Conciertos, etc
@@ -256,22 +249,12 @@ class Firebase():
                     listaCoincidencias.append(diccio)
                     break
         return listaCoincidencias
-    #Al final no utilice este codigo
-    #listaCoincidencias = []
-    #    for idValor in listaIDs:
-    #        for diccio in listaDiccio.each():
-    #            if(diccio.key()==idValor):
-    #                listaCoincidencias.append(diccio)
-    #                break
-        # Crea un nuevo diccionario que solo contiene los elementos con los IDs deseados
-    #    return listaCoincidencias
 
     # baseDeDatosTR
     # El siguiente metodo se utiliza para eliminar un diccionario mediante el ID
     # Con tipo especificamos en que seccion se encuentra el diccionario a eliminar, por ejemplo Usuarios
     # Con idObjeto especificamos que diccionario sera eliminado
     def eliminarDiccionario(self, tipo, idObjeto, contra=None):
-        
         # Si tipo es Usuarios, se debe eliminar tambien su correo de la autenticacion de Firebase
         if(tipo=="Usuarios"):
             # Obtenemos el diccionario del usuario
