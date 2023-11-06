@@ -69,7 +69,7 @@ class JodApp:
         output = io.BytesIO()
         # Guarda la figura en el objeto BytesIO
         fig.savefig(output, format='png')
-
+        plt.close()
         # objeto de io.BytesIO que contiene los datos de la imagen
         imagenCodificada = base64.b64encode(output.getvalue()).decode('utf-8')
         return imagenCodificada
@@ -92,7 +92,7 @@ class JodApp:
         output = io.BytesIO()
         # Guarda la figura en el objeto BytesIO
         fig.savefig(output, format='png')
-
+        plt.close()
         # objeto de io.BytesIO que contiene los datos de la imagen
         imagenCodificada = base64.b64encode(output.getvalue()).decode('utf-8')
         return imagenCodificada
@@ -482,7 +482,8 @@ class JodApp:
         usuarioDict = request.form['usuario']
         usuarioObj = request.form['usuarioObjeto']
         dni = request.form['dni']
-        
+        imagenCodificadaTorta = ""
+        imagenCodificadaBarras = ""
         #listaConciertos = self.firebase.recuperarTodosDict("Conciertos")
         #listaMatchs = self.firebase.recuperarTodosDict("Matchs")
 
@@ -504,7 +505,6 @@ class JodApp:
         # Para evitarnos errores porque generamos graficos desde el servidor
         matplotlib.use('Agg')
         imagenCodificadaTorta = self.__graficoTortaMasAsistentes(listaOrdenada)
-        matplotlib.use('Agg')
         imagenCodificadaBarras = self.__graficoBarrasMasAsistentes(listaOrdenada)
         context = { 'server_time': self.__formatoServidorTiempo(), 'dni':dni, 'listasFiestas':listaDatosFiestas, 'graficoTorta':imagenCodificadaTorta, 'graficoBarra': imagenCodificadaBarras}
         return render_template('jodappListaEventos.html', context=context)
