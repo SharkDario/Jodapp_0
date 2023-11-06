@@ -1,25 +1,47 @@
 from claseUbicacion import Ubicacion
 class Evento():
-    def __init__(self, nombre, fecha, ubicacion, precio, descripcion, anfitrion, fechaFin, capacidad, rango, asistentes=[]):
+    def __init__(self, **kwargs):
         # El ID se genera desde la base de datos de Firebase al guardar el objeto,
         # Con el metodo setID se guarda el valor del ID
-        self.__id=""
-        self.__nombre = nombre
-        self.__fecha = fecha
+        self.__id = kwargs.get('id', "")
+        self.__nombre = kwargs.get('nombre')
+        self.__fecha = kwargs.get('fecha')
         # Una instancia de la clase Ubicacion
         # Es una relacion de composicion con Evento siendo contenedora, y Ubicacion contenida
         # El parametro ubicacion es una lista con los argumentos necesarios de latitud, longitud y descripcion
+        ubicacion = kwargs.get('ubicacion')
         self.__ubicacion = Ubicacion(ubicacion[0], ubicacion[1], ubicacion[2])
-        self.__precio = precio
-        self.__descripcion = descripcion
-        self.__anfitrion = anfitrion
+        self.__precio = kwargs.get('precio')
+        self.__descripcion = kwargs.get('descripcion')
+        self.__anfitrion = kwargs.get('anfitrion')
         # Si el objeto se crea por primera vez sera una lista vacia
         # En cambio, si ya existe en la base de datos
         # se pasara la lista con los IDs de los asistentes
-        self.__asistentes = asistentes
-        self.__fechaFin = fechaFin
-        self.__capacidad = capacidad
-        self.__rango = rango
+        self.__asistentes = kwargs.get('asistentes', [])
+        self.__fechaFin = kwargs.get('fechaFin')
+        self.__capacidad = kwargs.get('capacidad')
+        self.__capacidad = int(self.__capacidad)
+        self.__rango = kwargs.get('rango')
+    #def __init__(self, nombre, fecha, ubicacion, precio, descripcion, anfitrion, fechaFin, capacidad, rango, asistentes=[]):
+        # El ID se genera desde la base de datos de Firebase al guardar el objeto,
+        # Con el metodo setID se guarda el valor del ID
+    #    self.__id=""
+    #    self.__nombre = nombre
+    #    self.__fecha = fecha
+        # Una instancia de la clase Ubicacion
+        # Es una relacion de composicion con Evento siendo contenedora, y Ubicacion contenida
+        # El parametro ubicacion es una lista con los argumentos necesarios de latitud, longitud y descripcion
+    #    self.__ubicacion = Ubicacion(ubicacion[0], ubicacion[1], ubicacion[2])
+    #    self.__precio = precio
+    #    self.__descripcion = descripcion
+    #    self.__anfitrion = anfitrion
+        # Si el objeto se crea por primera vez sera una lista vacia
+        # En cambio, si ya existe en la base de datos
+        # se pasara la lista con los IDs de los asistentes
+    #    self.__asistentes = asistentes
+    #    self.__fechaFin = fechaFin
+    #    self.__capacidad = capacidad
+    #    self.__rango = rango
 
     def getID(self):
         return self.__id
@@ -72,7 +94,7 @@ class Evento():
 
     def setUbicacion(self, valor, firebase, tipo):
         if(firebase.editarAtributos(tipo, self.getID(), {'ubicacion': valor})):
-            self.__ubicacion = valor
+            self.__ubicacion = Ubicacion(valor[0], valor[1], valor[2])
 
     def setPrecio(self, valor, firebase, tipo):
         if(firebase.editarAtributos(tipo, self.getID(), {'precio': valor})):
@@ -88,6 +110,7 @@ class Evento():
 
     def setAsistente(self, valor, firebase, tipo):
         if(firebase.editarAtributos(tipo, self.getID(), {'asistentes': valor}, "lista")):
+            firebase.editarAtributos("Usuarios", valor, {'listaEventosAsistidos': self.getID()}, "lista")
             self.__asistentes.append(valor)
 
     def setFechaFin(self, valor, firebase, tipo):
@@ -108,7 +131,7 @@ class Evento():
     # El metodo se define publico ya que ademas de ser usado dentro de __capacidadActual
     # y los metodos mostrar, tambien sera utilizado para realizar comparaciones entre eventos
     def cantidadAsistentes(self):
-        return len(self.__asistentes)
+        return int(len(self.__asistentes))
 
     def eliminarAsistente(self, idValor, firebase, tipo):
         if idValor in self.__asistentes:
@@ -122,7 +145,7 @@ class Evento():
             self.__asistentes.remove(idValor)
     #Datos generales
     def mostrarLista(self):
-        return f"{self.__nombre}\t{self.__fecha}\t{self.__fechaFin}\t{self.__precio}\t{self.__capacidad}\t{self.__capacidadActual()}\t{self.cantidadAsistentes()}\t{self.__rango}"
+        return f"{self.__nombre}$&${self.__fecha}$&${self.__fechaFin}$&${self.__precio}$&${self.__capacidad}$&${self.__capacidadActual()}$&${self.cantidadAsistentes()}$&${self.__rango}"
     
     def mostrarAsistentes(self, usuarios):
         cadenaAsistentes = "Asistentes\n"

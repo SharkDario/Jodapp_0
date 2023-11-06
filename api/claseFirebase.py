@@ -196,17 +196,57 @@ class Firebase():
             if listaDiccio[clave] == diccio:
                 return clave
         return None
+    
+    def obtenerTodosDictConKey(self, tipo, clave='id'):
+        listaDictPyre = self.baseDeDatosTR.child(tipo).get()
+        listaDict = []
+        for diccio in listaDictPyre:
+            diccioAux = diccio.val()
+            diccioAux[clave] = diccio.key()
+            listaDict.append(diccioAux)
+        return listaDict
 
-
+    def recuperarTodosDict(self, tipo, valor=None, asistidos=False):
+        # Se obtienen todos los elementos del "tipo"
+        diccionarios = self.baseDeDatosTR.child(tipo).get().val()
+        # Ahora se recuperan todos los elementos en un diccionario que las claves son los ids, y los valores son los diccionarios del "tipo"
+        if diccionarios is None:
+            diccionarios = {}
+        else:
+            if(valor is not None):
+                listaNueva = []
+                # Recorre cada diccionario
+                for clave, diccionario in diccionarios.items():
+                    if(asistidos):
+                        listaIntegrantes = diccionario.get('asistentes', [])
+                        if valor in listaIntegrantes:
+                            # Para saber si asiste al evento
+                            diccio = diccionario
+                            diccio['id'] = clave
+                            listaNueva.append(diccio)
+                    else:
+                        if valor in diccionario.values():
+                            # Si el valor esta en el diccionario, lo agrega a la lista
+                            # Para saber si es el creador del evento
+                            diccio = diccionario
+                            diccio['id'] = clave
+                            listaNueva.append(diccio)
+                # Reemplaza la lista de diccionarios con la nueva
+                diccionarios = listaNueva
+        return diccionarios
+    
+    def recuperarTodosDictUser(self, tipo):
+        # Se obtienen todos los elementos del "tipo"
+        diccionarios = self.baseDeDatosTR.child(tipo).get().val()
+        # Ahora se recuperan todos los elementos en un diccionario que las claves son los ids, y los valores son los diccionarios del "tipo"
+        if diccionarios is None:
+            diccionarios = {}
+        return diccionarios
 
     # baseDeDatosTR
     # El siguiente metodo se utiliza para obtener muchos objetos en base a una lista de IDs
     # En el caso de que la lista sea de un solo ID, devolvera solo un diccionario
-    #def obtenerListaDiccionarios2(self, tipo, listaIDs):
-    #    listaDiccio = self.baseDeDatosTR.child(tipo).get()
-        # Crea un nuevo diccionario que solo contiene los elementos con los IDs deseados
-    #    return {id: listaDiccio[id] for id in listaIDs if id in listaDiccio}
-
+    # Este es un dict Pyre, eso quiere decir que tiene .value()=valores y .key()=id/child/dni
     def obtenerListaDiccionarios(self, tipo, listaIDs):
         listaDiccio = self.baseDeDatosTR.child(tipo).get()
         listaCoincidencias = []
@@ -234,12 +274,31 @@ class Firebase():
         
         # Si tipo es Usuarios, se debe eliminar tambien su correo de la autenticacion de Firebase
         if(tipo=="Usuarios"):
-            #diccio = self.obtenerDiccionario(tipo, idObjeto)
+            # Obtenemos el diccionario del usuario
             diccio = self.obtenerListaDiccionarios(tipo, [idObjeto])
             diccio = diccio[0]
+            diccio = diccio.val()
             # Como la contrasenna no se guarda en la base de datos, se debe pasar como argumento
             userFire = self.authIniciarSesion(diccio['correo'], contra)
             self.autenticacion.delete_user_account(userFire['idToken'])
+        if(tipo=="Fiestas" or tipo=="Conciertos" or tipo=="Matchs"):
+            # Obtenemos el diccionario del evento
+            diccio = self.obtenerListaDiccionarios(tipo, [idObjeto])
+            diccio = diccio[0]
+            diccio = diccio.val()
+            asistentes = diccio['asistentes']
+            anfitrion = diccio['anfitrion']
+            try:
+                # Eliminamos el id del evento de la lista de eventos creados del usuario anfitrion
+                self.eliminarID("Usuarios", anfitrion, 'listaEventos', idObjeto)
+            except:
+                print("Ya ha sido eliminado")
+            for asistente in asistentes:
+                try:
+                    # Eliminamos el id del evento de la lista de asistencias de cada usuario asistente
+                    self.eliminarID("Usuarios", asistente, 'listaEventosAsistidos', idObjeto)
+                except:
+                    print("Ya ha sido eliminado")
         # Finalmente se elimina el objeto de la base de datos
         self.baseDeDatosTR.child(tipo).child(idObjeto).remove()
 

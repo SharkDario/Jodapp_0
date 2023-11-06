@@ -2,13 +2,20 @@ from claseEvento import Evento
 
 # Cuando es una fiesta que ya fue creada, debo pasarle por el constructor todos los datos exactos que tiene en la bd
 class Fiesta(Evento):
-    def __init__(self, nombre, fecha, ubicacion, precio, descripcion, anfitrion, fechaFin, capacidad, rango, vestimenta, bar, conservadora, categoria):
-        super().__init__(nombre, fecha, ubicacion, precio, descripcion, anfitrion, fechaFin, capacidad, rango)
-        self.__vestimenta = vestimenta
-        self.__bar = bar
-        self.__conservadora = conservadora
-        self.__categoria = categoria
-        self.__bandas = []
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.__vestimenta = kwargs.get('vestimenta')
+        self.__bar = kwargs.get('bar')
+        self.__conservadora = kwargs.get('conservadora')
+        self.__categoria = kwargs.get('categoria')
+        self.__bandas = kwargs.get('bandas', [])
+    #def __init__(self, nombre, fecha, ubicacion, precio, descripcion, anfitrion, fechaFin, capacidad, rango, vestimenta, bar, conservadora, categoria, bandas=[]):
+    #    super().__init__(nombre, fecha, ubicacion, precio, descripcion, anfitrion, fechaFin, capacidad, rango)
+    #    self.__vestimenta = vestimenta
+    #    self.__bar = bar
+    #    self.__conservadora = conservadora
+    #    self.__categoria = categoria
+    #    self.__bandas = bandas
 
     def getVestimenta(self):
         return self.__vestimenta
@@ -49,16 +56,16 @@ class Fiesta(Evento):
     def setAnfitrion(self, valor, firebase):
         super().setAnfitrion(valor, firebase, "Fiestas")
 
-    def setAsistente(self, valor, firebase, tipo):
+    def setAsistente(self, valor, firebase):
         super().setAsistente(valor, firebase, "Fiestas")
 
     def setFechaFin(self, valor, firebase):
         super().setFechaFin(valor, firebase, "Fiestas")
 
-    def setCapacidad(self, valor, firebase, tipo):
+    def setCapacidad(self, valor, firebase):
         super().setCapacidad(valor, firebase, "Fiestas")
 
-    def setRango(self, valor, firebase, tipo):
+    def setRango(self, valor, firebase):
         super().setRango(valor, firebase, "Fiestas")
 
 
@@ -91,6 +98,10 @@ class Fiesta(Evento):
             # Como es una agregacion solo puedo eliminar el ID de mi listaBandas dentro de la fiesta
             firebase.eliminarID("Fiestas", self.getID(), 'bandas', idBanda)
             self.__bandas.remove(idBanda)
+
+    #Polimorfismo
+    def eliminarAsistente(self, idValor, firebase):
+        super().eliminarAsistente(idValor, firebase, "Fiestas")
 
     def __mostrarBandas(self):
         bandas=""

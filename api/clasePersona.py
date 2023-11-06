@@ -1,10 +1,16 @@
 
 class Persona():
-    def __init__(self, dni, nombre, apellido, edad):
-        self.__dni = dni
-        self.__nombre = nombre
-        self.__apellido = apellido
-        self.__edad = edad
+    def __init__(self, **kwargs):
+        self.__dni = kwargs.get('dni')
+        self.__nombre = kwargs.get('nombre')
+        self.__apellido = kwargs.get('apellido')
+        self.__edad = kwargs.get('edad')
+
+    #def __init__(self, dni, nombre, apellido, edad):
+    #    self.__dni = dni
+    #    self.__nombre = nombre
+    #    self.__apellido = apellido
+    #    self.__edad = edad
 
     def getDNI(self):
         return self.__dni
