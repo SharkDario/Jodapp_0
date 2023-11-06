@@ -76,7 +76,10 @@
           <label for="ubicacion">Ubicación:</label>
           <input type="text" id="ubicacionD" name="ubicacionD"><br>
         </div>
-        <div id="miMapa" style="position:relative;width:350px;height:350px;"></div>
+        <div style="border-radius: 15px; overflow: hidden; width: 350px; height: 350px;">
+          <div id="miMapa" style="position:relative;width:350px;height:350px;"></div>
+        </div>
+        
         <!-- Campos ocultos para la latitud y longitud seleccionada -->
         <input type="hidden" id="latitud" name="latitud" value="{{latitud}}">
         <input type="hidden" id="longitud" name="longitud" value="{{longitud}}">

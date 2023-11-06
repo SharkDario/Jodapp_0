@@ -86,7 +86,9 @@
           <label for="ubicacion">Ubicación:</label>
           <input type="text" id="ubicacionD" name="ubicacionD" value="{{context.fiesta['ubicacion'][2]}}"><br>
         </div>
-        <div id="miMapa" style="position:relative;width:350px;height:350px;"></div>
+        <div style="border-radius: 15px; overflow: hidden; width: 350px; height: 350px;">
+          <div id="miMapa" style="position:relative;width:350px;height:350px;"></div>
+        </div>
         <!-- Campos ocultos para la latitud y longitud seleccionada -->
         <input type="hidden" id="latitud" name="latitud" value="{{context.fiesta['ubicacion'][0]}}">
         <input type="hidden" id="longitud" name="longitud" value="{{context.fiesta['ubicacion'][1]}}">
@@ -128,7 +130,9 @@
           <label for="ubicacion">Ubicación:</label>
           <input type="text" id="ubicacionD" name="ubicacionD" value="{{context.fiesta['ubicacion'][2]}}" readonly><br>
         </div>
-        <div id="miMapa" style="position:relative;width:350px;height:350px;"></div>
+        <div style="border-radius: 15px; overflow: hidden; width: 350px; height: 350px;">
+          <div id="miMapa" style="position:relative;width:350px;height:350px;"></div>
+        </div>
         <!-- Campos ocultos para la latitud y longitud seleccionada -->
         <input type="hidden" id="latitud" name="latitud" value="{{context.fiesta['ubicacion'][0]}}" readonly>
         <input type="hidden" id="longitud" name="longitud" value="{{context.fiesta['ubicacion'][1]}}" readonly>
