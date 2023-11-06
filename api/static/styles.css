@@ -1,19 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 #context {
     position: absolute;
     top: 0;
     right: 0;
-    color: #2B3499; 
+    color: #FFEED9; 
     font-weight: bold; 
     font-size: 16px; 
     margin: 0 0 8px;
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
 }
 body { 
     background: #2B3499; 
     color: rgba(0,0,0,0.87); 
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     margin: 0; 
     padding: 0; 
+}
+.flashes {
+    padding: 15px;
+    margin-bottom: 20px;
+    font-family: 'Roboto', sans-serif;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #ffffff;
+    background-color: #FF6C22;
+    border-color: #ed9c28;
+    text-align: center;
+    animation: flash 5s ease-in-out infinite;
+}
+@keyframes flash {
+    0% {opacity: 1;}
+    50% {opacity: 0.1;}
+    100% {opacity: 1;}
+}
+#miMapa {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    border-radius: 15px;
 }
 #graficoForm { 
     background: #FFEED9;
@@ -26,7 +50,7 @@ body {
     position: relative;
     top: 50px;
     left: 50px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 #tableForm { 
     background: #FFEED9;
@@ -38,34 +62,36 @@ body {
     position: relative;
     top: 50px;
     left: 50px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 #tableForm h1 { 
     font-size: 22px; 
-    font-weight: 300; 
+    font-weight: bold; 
     color: rgba(0,0,0,0.6);
-    font-family: 'Open Sans', sans-serif;  
+    font-family: 'Roboto', sans-serif;  
     margin: 0 0 16px;
 }
 #tableForm h2 { 
     color: #2B3499; 
     font-weight: bold; 
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     font-size: 16px; 
     margin: 0 0 8px; 
 }
 #tableForm table {
     background: #FF6C22;
-    border-radius: 3px;
+    border-radius: 5px;
     color: #2B3499;
     font-weight: bold;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 14px;
     width: 100%;
     margin: 0;
-    padding: 0px 0px;
+    padding: 10px 10px;
     border: 1px solid #2B3499;
     table-layout: fixed;
+    border-collapse: collapse;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
 }
 #tableForm table td, table th {
     text-align: left;
@@ -80,10 +106,15 @@ body {
     text-transform: uppercase;
     text-decoration: none;
     color: #FFEED9;
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     font-size: 10px;
     padding: 4px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+#tableForm input:hover {
+    background: #0056b3;
 }
 #homeForm { 
     background: #FFEED9; 
@@ -95,33 +126,33 @@ body {
 #homeForm h2 { 
     color: #2B3499; 
     font-weight: bold; 
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     font-size: 16px; 
     margin: 0 0 8px; 
 }
 #homeForm h1 { 
     font-size: 22px; 
-    font-weight: 300; 
+    font-weight: bold; 
     color: rgba(0,0,0,0.6);
-    font-family: 'Open Sans', sans-serif;  
+    font-family: 'Roboto', sans-serif;  
     margin: 0 0 16px;
 }
 #homeForm label { 
     line-height: 140%; 
     margin: 16px 0 24px; 
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     font-size: 14px; 
 }
 #homeForm input { 
     line-height: 140%; 
     margin: 16px 0 24px; 
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     font-size: 14px; 
 }
 #homeForm form { 
     color: #2B3499; 
     font-weight: bold;
-    font-family: 'Open Sans', sans-serif;  
+    font-family: 'Roboto', sans-serif;  
     font-size: 16px; 
     margin: 0 0 8px; 
 }
@@ -131,9 +162,14 @@ button {
      text-transform: uppercase;
      text-decoration: none;
      color: #FFEED9;
-     font-family: 'Open Sans', sans-serif; 
+     font-family: 'Roboto', sans-serif; 
      padding: 16px;
      border-radius: 4px;
+     cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+button:hover {
+    background: #2B3499;
 }
 .inputGrupo {
     display: flex;
@@ -155,7 +191,7 @@ button {
     text-transform: uppercase;
     text-decoration: none;
     color: #FFEED9;
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     padding: 5px;
     border-radius: 4px;
 }
@@ -165,17 +201,28 @@ select {
     text-transform: uppercase;
     text-decoration: none;
     color: #FFEED9;
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     padding: 5px;
     border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+select:hover {
+    background: #0056b3;
+}
+select:focus {
+    outline: none;
 }
 button { 
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 }
 #pie { 
-     color:rgba(0,0,0,0.4);
-     text-align:center;
-     font-size:13px;
+    color:#FFEED9;
+    text-align:center;
+    font-size:13px;
 }
 @media (max-width:600px) {
      body, #homeForm {
@@ -192,54 +239,63 @@ button {
     background: #FFEED9; 
     max-width: 800px; 
     margin: 50px 20px 16px;
-    font-family: 'Open Sans', sans-serif;  
+    font-family: 'Roboto', sans-serif;  
     padding: 32px 24px; 
     border-radius: 3px; 
 }
 #crearEventoForm h2 { 
     color: #2B3499; 
     font-weight: bold; 
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     font-size: 16px; 
     margin: 0 0 8px; 
 }
 #crearEventoForm h1 { 
     font-size: 22px; 
-    font-weight: 300; 
-    font-family: 'Open Sans', sans-serif; 
+    font-weight: bold; 
+    font-family: 'Roboto', sans-serif; 
     color: rgba(0,0,0,0.6); 
     margin: 0 0 16px;
 }
 #crearEventoForm label { 
     line-height: 140%; 
     margin: 16px 0 24px; 
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     font-size: 14px; 
 }
 #crearEventoForm input { 
     line-height: 140%; 
     margin: 16px 0 24px;
-    font-family: 'Open Sans', sans-serif;  
+    font-family: 'Roboto', sans-serif;  
     font-size: 14px; 
 }
 #crearEventoForm form { 
     color: #2B3499; 
     font-weight: bold; 
     font-size: 16px; 
-    font-family: 'Open Sans', sans-serif; 
+    font-family: 'Roboto', sans-serif; 
     margin: 0 0 8px; 
 }
 #loginForm { background: #FFEED9; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
 #loginForm h2 { color: #2B3499; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-#loginForm h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+#loginForm h1 { font-size: 22px; font-weight: bold; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
 #loginForm label { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
 #loginForm input { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-#loginForm #boton { display: block; text-align: center; background: #2B3499; text-transform: uppercase; text-decoration: none; color: #FFEED9; padding: 16px; border-radius: 4px; }
-#loginForm, #loginForm #boton { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+#loginForm #boton { display: block; text-align: center; background: #FF6C22; text-transform: uppercase; text-decoration: none; color: #FFEED9; padding: 16px; border-radius: 4px; cursor: pointer; transition: all 0.2s ease-in-out;}
+#loginForm, #loginForm #boton { box-shadow: 0 1px 3px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.24); cursor: pointer; transition: all 0.2s ease-in-out; }
 #signupForm { background: #FFEED9; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
 #signupForm h2 { color: #2B3499; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-#signupForm h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+#signupForm h1 { font-size: 22px; font-weight: bold; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
 #signupForm label { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
 #signupForm input { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-#signupForm #boton { display: block; text-align: center; background: #2B3499; text-transform: uppercase; text-decoration: none; color: #FFEED9; padding: 16px; border-radius: 4px; }
-#signupForm, #signupForm #boton { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+#signupForm #boton { display: block; text-align: center; background: #FF6C22; text-transform: uppercase; text-decoration: none; color: #FFEED9; padding: 16px; border-radius: 4px; cursor: pointer; transition: all 0.2s ease-in-out; }
+#signupForm, #signupForm #boton { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); cursor: pointer; transition: all 0.2s ease-in-out; }
+#loginForm #boton:hover {
+    background: #2B3499;
+}
+#signupForm #boton:hover {
+    background: #2B3499;
+}
+h1 {
+    font-weight: bold;
+}
