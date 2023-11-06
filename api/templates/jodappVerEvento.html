@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bienvenido </title>
+    <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=getMapa' async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type='text/javascript'>
+    // clave de bing: AqF8_BsEjsHhq8t5joDysX5hR6IgQILterGBHZdqRkIDA46XaKr-estp9FIa3v3b
+    var currentPushpin = null;  // Guarda una referencia al marcador actual
+
+    function getMapa() {
+        var mapa = new Microsoft.Maps.Map('#miMapa', {
+            credentials: 'AqF8_BsEjsHhq8t5joDysX5hR6IgQILterGBHZdqRkIDA46XaKr-estp9FIa3v3b'
+        });
+        // Obtiene la ubicación predefinida de los campos ocultos del formulario
+        var ubicacionPredefinida = new Microsoft.Maps.Location($('#latitud').val(), $('#longitud').val());
+
+        // Centra el mapa en la ubicación predefinida
+        mapa.setView({ center: ubicacionPredefinida, zoom: 10 });
+
+        // Crea un nuevo marcador en la ubicación predefinida
+        var marcadorPredefinido = new Microsoft.Maps.Pushpin(ubicacionPredefinida, null);
+        mapa.entities.push(marcadorPredefinido);
+
+        // Agrega un controlador de eventos de clic al mapa
+        Microsoft.Maps.Events.addHandler(mapa, 'click', function(e) {
+            // Obtiene la ubicación del clic
+            var ubicacion = e.location;
+
+            // Si hay un marcador actual, lo elimina del mapa
+            if (currentPushpin) {
+                mapa.entities.remove(currentPushpin);
+            }
+
+            // Crea un nuevo marcador en la ubicación del clic
+            currentPushpin = new Microsoft.Maps.Pushpin(ubicacion, null);
+            mapa.entities.push(currentPushpin);
+            
+            // Actualiza los campos ocultos del formulario con la latitud y longitud
+            $('#latitud').val(ubicacion.latitude);
+            $('#longitud').val(ubicacion.longitude);
+          });
+    }
+    </script>
+    
+    <link rel="icon" href="{{ url_for('static', filename='logo.jpeg') }}" type="image/jpeg">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div id="crearEventoForm">
+      <h2>Ver Evento</h2>
+      <!-- Se muestra el nombre del evento seleccionado Fiesta, Concierto o Match -->
+      <h1>{{context.evento}}</h1>
+      <!-- Se manejan los mensajes de entradas no validas -->
+      {% with mensajes = get_flashed_messages(category_filter=['evento']) %}
+      {% if mensajes %}
+        <ul class=flashes>
+        {% for mensaje in mensajes %}
+          <li>{{ mensaje }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+      {% endwith %}
+      <!-- CREAR EVENTO -->
+      <form method="POST", action="/accionEvento">
+        {% if context.dni == context.dniCreador %}
+        <div class="inputGrupo">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" value="{{context.fiesta['nombre']}}"><br>
+        </div>
+        <div class="inputGrupo">  
+          <label for="descripcion">Descripción:</label>
+          <input type="text" id="descripcion" name="descripcion" value="{{context.fiesta['descripcion']}}"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="fecha">Fecha:</label>
+          <input type="date" id="fecha" name="fecha" value="{{context.fiesta['fecha']}}"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="fechaFin">Fecha de finalización:</label>
+          <input type="date" id="fechaFin" name="fechaFin" value="{{context.fiesta['fechaFin']}}"><br>
+        </div>
+        <div class="inputGrupo"> 
+          <label for="ubicacion">Ubicación:</label>
+          <input type="text" id="ubicacionD" name="ubicacionD" value="{{context.fiesta['ubicacion'][2]}}"><br>
+        </div>
+        <div id="miMapa" style="position:relative;width:350px;height:350px;"></div>
+        <!-- Campos ocultos para la latitud y longitud seleccionada -->
+        <input type="hidden" id="latitud" name="latitud" value="{{context.fiesta['ubicacion'][0]}}">
+        <input type="hidden" id="longitud" name="longitud" value="{{context.fiesta['ubicacion'][1]}}">
+        <br>
+        <div class="inputGrupo">
+          <label for="precio">Precio de entrada:</label>
+          <input type="number" id="precio" name="precio" min="0" value="{{context.fiesta['precio']}}"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="capacidad">Capacidad:</label>
+          <input type="number" id="capacidad" name="capacidad" min="1" value="{{context.fiesta['capacidad']}}"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="edadMin">Edad mínima:</label>
+          <input type="number" id="edadMin" name="edadMin" min="13" value="{{context.fiesta['rango'][0]}}"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="edadMax">Edad máxima:<br>(100 = sin límite)</label>
+          <input type="number" id="edadMax" name="edadMax" min="14" max="101" value="{{context.fiesta['rango'][1]}}"><br>
+        </div>
+        {% else %}
+        <div class="inputGrupo">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" value="{{context.fiesta['nombre']}}" readonly><br>
+        </div>
+        <div class="inputGrupo">  
+          <label for="descripcion">Descripción:</label>
+          <input type="text" id="descripcion" name="descripcion" value="{{context.fiesta['descripcion']}}" readonly><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="fecha">Fecha:</label>
+          <input type="date" id="fecha" name="fecha" value="{{context.fiesta['fecha']}}" readonly><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="fechaFin">Fecha de finalización:</label>
+          <input type="date" id="fechaFin" name="fechaFin" value="{{context.fiesta['fechaFin']}}" readonly><br>
+        </div>
+        <div class="inputGrupo"> 
+          <label for="ubicacion">Ubicación:</label>
+          <input type="text" id="ubicacionD" name="ubicacionD" value="{{context.fiesta['ubicacion'][2]}}" readonly><br>
+        </div>
+        <div id="miMapa" style="position:relative;width:350px;height:350px;"></div>
+        <!-- Campos ocultos para la latitud y longitud seleccionada -->
+        <input type="hidden" id="latitud" name="latitud" value="{{context.fiesta['ubicacion'][0]}}" readonly>
+        <input type="hidden" id="longitud" name="longitud" value="{{context.fiesta['ubicacion'][1]}}" readonly>
+        <br>
+        <div class="inputGrupo">
+          <label for="precio">Precio de entrada:</label>
+          <input type="number" id="precio" name="precio" min="0" value="{{context.fiesta['precio']}}" readonly><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="capacidad">Capacidad:</label>
+          <input type="number" id="capacidad" name="capacidad" min="1" value="{{context.fiesta['capacidad']}}" readonly><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="edadMin">Edad mínima:</label>
+          <input type="number" id="edadMin" name="edadMin" min="13" value="{{context.fiesta['rango'][0]}}" readonly><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="edadMax">Edad máxima:<br>(100 = sin límite)</label>
+          <input type="number" id="edadMax" name="edadMax" min="14" max="101" value="{{context.fiesta['rango'][1]}}" readonly><br>
+        </div>
+        {% endif %}
+        {% if context.evento == 'Fiesta' %}
+        {% if context.dni == context.dniCreador %}
+        <div class="inputGrupo">  
+          <label for="vestimenta">Vestimenta:</label>
+          <input type="text" id="vestimenta" name="vestimenta" value="{{context.fiesta['vestimenta']}}"><br>
+        </div>
+        <div class="inputGrupo">  
+          <label for="categoria">Categoría:</label>
+          <input type="text" id="categoria" name="categoria" value="{{context.fiesta['categoria']}}"><br>
+        </div>
+        <div class="selectGrupo">
+          <label for="bar">Bar:</label>
+          <select name="bar">
+            <option value="True" {% if context.fiesta['bar']=="True" %}selected{% endif %}>Sí</option>
+            <option value="False" {% if context.fiesta['bar']=="False" %}selected{% endif %}>No</option>
+          </select>
+        </div>
+        <div class="selectGrupo">
+          <label for="conservadora">Conservadora:</label>
+          <select name="conservadora">
+            <option value="True" {% if context.fiesta['conservadora']=="True" %}selected{% endif %}>Sí</option>
+            <option value="False" {% if context.fiesta['conservadora']=="False" %}selected{% endif %}>No</option>
+          </select>
+        </div>
+        
+        {% else %}
+        <div class="inputGrupo">  
+          <label for="vestimenta">Vestimenta:</label>
+          <input type="text" id="vestimenta" name="vestimenta" value="{{context.fiesta['vestimenta']}}" readonly><br>
+        </div>
+        <div class="inputGrupo">  
+          <label for="categoria">Categoría:</label>
+          <input type="text" id="categoria" name="categoria" value="{{context.fiesta['categoria']}}" readonly><br>
+        </div>
+        <div class="selectGrupo">
+          <label for="bar">Bar:</label>
+          <select name="bar" disabled>
+            <option value="True" {% if context.fiesta['bar']=="True" %}selected{% endif %}>Sí</option>
+            <option value="False" {% if context.fiesta['bar']=="False" %}selected{% endif %}>No</option>
+          </select>
+        </div>
+        <div class="selectGrupo">
+          <label for="conservadora">Conservadora:</label>
+          <select name="conservadora" disabled>
+            <option value="True" {% if context.fiesta['conservadora']=="True" %}selected{% endif %}>Sí</option>
+            <option value="False" {% if context.fiesta['conservadora']=="False" %}selected{% endif %}>No</option>
+          </select>
+        </div>
+        
+        
+        {% endif %}
+        
+        {% elif context.evento == 'Concierto' %}
+        <label for="descripcion">Descripción:</label>
+        {% elif context.evento == 'Match' %}
+        <label for="descripcion">Descripción:</label>
+        <input type=hidden id="listaEquipoIds" name="listaEquipoIds">
+        {% endif %}
+        <input type=hidden id="dni" name="dni" value={{context.dni}}>
+        <input type=hidden id="dniCreador" name="dniCreador" value={{context.dniCreador}}>
+        <input type=hidden value="{{context.fiesta['id']}}" name="idEvento">
+        <input type=hidden value="{{context.evento}}" name="tipoEvento">
+        <input type=hidden value="{{context.asistencia}}" name="asistencia">
+        {% if context.asistencia == "NO" %}
+        <button type="submit" name="accion" value="asistir">Asistir {{context.evento}}</button>
+        {% else %}
+        <button type="submit" name="accion" value="noAsistir">Cancelar asistencia {{context.evento}}</button>
+        {% endif %}
+        {% if context.dni == context.dniCreador %}
+        <button type="submit" name="accion" value="editar">Editar {{context.evento}}</button>
+        <button type="submit" name="accion" value="eliminar">Eliminar {{context.evento}}</button>
+        {% endif %}
+      </form>
+    </div>
+    <p id="pie">Grupo 2</p>
+</body>
+</html>

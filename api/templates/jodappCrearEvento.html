@@ -35,6 +35,7 @@
           });
     }
     </script>
+    
     <link rel="icon" href="{{ url_for('static', filename='logo.jpeg') }}" type="image/jpeg">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -44,7 +45,7 @@
       <!-- Se muestra el nombre del evento seleccionado Fiesta, Concierto o Match -->
       <h1>{{context.evento}}</h1>
       <!-- Se manejan los mensajes de entradas no validas -->
-      {% with mensajes = get_flashed_messages() %}
+      {% with mensajes = get_flashed_messages(category_filter=['evento']) %}
       {% if mensajes %}
         <ul class=flashes>
         {% for mensaje in mensajes %}
@@ -53,6 +54,7 @@
         </ul>
       {% endif %}
       {% endwith %}
+      <!-- CREAR EVENTO -->
       <form method="POST", action="/crearEvento">
         <div class="inputGrupo">
           <label for="nombre">Nombre:</label>
@@ -71,13 +73,13 @@
           <input type="date" id="fechaFin" name="fechaFin"><br>
         </div>
         <div class="inputGrupo"> 
-        <label for="ubicacion">Ubicación:</label>
-        <input type="text" id="descripcionUbi" name="descripcionUbi"><br>
+          <label for="ubicacion">Ubicación:</label>
+          <input type="text" id="ubicacionD" name="ubicacionD"><br>
         </div>
         <div id="miMapa" style="position:relative;width:350px;height:350px;"></div>
         <!-- Campos ocultos para la latitud y longitud seleccionada -->
-        <input type="hidden" id="latitud" name="latitud">
-        <input type="hidden" id="longitud" name="longitud">
+        <input type="hidden" id="latitud" name="latitud" value="{{latitud}}">
+        <input type="hidden" id="longitud" name="longitud" value="{{longitud}}">
         <br>
         <div class="inputGrupo">
           <label for="precio">Precio de entrada:</label>
@@ -93,7 +95,7 @@
         </div>
         <div class="inputGrupo">
           <label for="edadMax">Edad máxima:<br>(100 = sin límite)</label>
-          <input type="number" id="edadMax" name="edadMax" min="14"><br>
+          <input type="number" id="edadMax" name="edadMax" min="14" max="101"><br>
         </div>
         {% if context.evento == 'Fiesta' %}
         <div class="inputGrupo">  
@@ -107,36 +109,170 @@
         <div class="selectGrupo">
           <label for="bar">Bar:</label>
           <select name="bar">
-            <option value="SI">Sí</option>
-            <option value="NO">No</option>
+            <option value="True">Sí</option>
+            <option value="False">No</option>
           </select>
         </div>
         <div class="selectGrupo">
           <label for="conservadora">Conservadora:</label>
           <select name="conservadora">
-            <option value="SI">Sí</option>
-            <option value="NO">No</option>
+            <option value="True">Sí</option>
+            <option value="False">No</option>
           </select>
         </div>
         <div class="selectGrupo">
           <label for="bandas">Bandas:</label>
           <select name="bandas">
-            <option value="BANDA1">BANDA1</option>
-            <option value="BANDA2">BANDA2</option>
+            {% for id, banda in context.dictGrupo.items() %}
+            <option value="{{ id }}">{{ banda.nombre }}</option>
+            {% endfor %}
           </select>
+          <button type="button" id="agregarBanda" onclick="agregar('bandas', 'Banda')">Agregar banda</button>
+          
         </div>
+       
+        
         {% elif context.evento == 'Concierto' %}
         <label for="descripcion">Descripción:</label>
         {% elif context.evento == 'Match' %}
         <label for="descripcion">Descripción:</label>
+        <input type=hidden id="listaEquipoIds" name="listaEquipoIds">
         {% endif %}
-          <button type="submit">Crear {{context.evento}}</button>
+        <input type=hidden id="listaBandaIds" name="listaBandaIds">
+        <input type=hidden id="dni" name="dni" value={{context.dni}}>
+        <input type=hidden id="usuario" name="usuario" value={{context.usuario}}>
+        <input type=hidden id="usuarioObjeto" name="usuarioObjeto" value={{context.usuarioObjeto}}>
+        <input type=hidden value="{{context.evento}}" name="tipoEvento">
+        <br>
+        <div id="mensajeBanda"></div>
+        <br>
+        <button type="submit">Crear {{context.evento}}</button>
       </form>
     </div>
-    <form method="POST", action="/crearBanda">
-      <div id="crearEventoForm">
-      </div>
-    </form>
+    {% if context.evento != 'Match' %}
+    
+    <div id="crearEventoForm", style="display: inline-block;">
+        
+      <h2>Crear banda</h2>
+      <h1>Banda</h1>
+      {% with mensajes = get_flashed_messages(category_filter=['banda']) %}
+      {% if mensajes %}
+        <ul class=flashes>
+        {% for mensaje in mensajes %}
+          <li>{{ mensaje }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+      {% endwith %}
+      <form method="POST", action="/crearBanda">
+        <div class="inputGrupo">
+          <label for="nombreB">Nombre:</label>
+          <input type="text" id="nombreB" name="nombreB"><br>
+        </div>
+        <div class="inputGrupo">  
+          <label for="generoB">Genero:</label>
+          <input type="text" id="generoB" name="generoB"><br>
+        </div>
+        <div class="selectGrupo">
+          <label for="artistasB">Integrantes:</label>
+          <select name="artistasB">
+            {% for id, artista in context.dictPerso.items() %}
+            <option value="{{ id }}">{{ artista.nombre }} {{ artista.apellido}}</option>
+            {% endfor %}
+          </select>
+          <button type="button" id="agregarArtista" onclick="agregar('artistasB', 'Artista')">Agregar integrante</button>
+        </div>
+        <input type=hidden id="listaArtistaIds" name="listaArtistaIds">
+        <input type=hidden id="usuario" name="usuario" value="{{context.usuario}}">
+        <input type=hidden id="usuarioObj" name="usuarioObj" value="{{context.usuarioObjeto}}">
+        <input type=hidden value="{{context.evento}}" name="tipoEvento">
+        <br>
+        <div id="mensajeArtista"></div>
+        <br>
+        <button type="submit">Crear Banda</button>
+      </form>
+    
+    </div>
+    <div id="crearEventoForm", style="display: inline-block;">
+      <h2>Crear artista</h2>
+      <h1>Artista</h1>
+      {% with mensajes = get_flashed_messages(category_filter=['artista']) %}
+      {% if mensajes %}
+        <ul class=flashes>
+        {% for mensaje in mensajes %}
+          <li>{{ mensaje }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+      {% endwith %}
+      <form method="POST", action="/crearArtista">
+        <div class="inputGrupo">
+          <label for="dni">DNI:</label>
+          <input type="number" id="dni" name="dni" min="10000000"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="apellido">Apellido:</label>
+          <input type="text" id="apellido" name="apellido"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="edad">Edad:</label>
+          <input type="number" id="edad" name="edad" min="13"><br>
+        </div>
+        <div class="inputGrupo">
+          <label for="talento">Talento:</label>
+          <input type="text" id="talento" name="talento"><br>
+        </div>
+        <input type=hidden name="usuario" value="{{context.usuario}}">
+        <input type=hidden name="usuarioObj" value="{{context.usuarioObjeto}}">
+        <input type=hidden value="{{context.evento}}" name="tipoEvento">
+        <button type="submit">Crear Artista</button>
+      </form>
+    </div>
+    {% endif %}
     <p id="pie">Grupo 2</p>
+    <script type='text/javascript'>
+      // Crear las listas vacía para almacenar los IDs
+      var listaArtistaIds = [];
+      var listaJugadorIds = [];
+      var listaBandaIds = [];
+      var listaEquipoIds = [];
+
+      var listas = {
+        'Artista': listaArtistaIds,
+        'Jugador': listaJugadorIds,
+        'Banda': listaBandaIds,
+        'Equipo': listaEquipoIds
+      };
+      //document.querySelector('#agregarArtista').onclick = function() { agregar('artistasB', 'Artista'); };
+      // Función para manejar el evento de clic
+      // Argumentos: (artistasB, Artista) (jugadoresE, Jugador) (bandas, Banda) (equipos, Equipo)
+      function agregar(lista, persona) {
+        // Prevenir el comportamiento predeterminado
+        //event.preventDefault();
+        // Obtener el elemento select 
+        var select = document.querySelector(`select[name="${lista}"]`);
+        // Obtener el ID del integrante seleccionado
+        var idSeleccionado = select.value;
+        // Agregar el ID a la lista
+        listas[persona].push(idSeleccionado);
+        // Mostrar mensaje en la pagina
+        document.querySelector(`#mensaje${persona}`).textContent = `(${persona} agregad@)`;
+        // Lo convierto para utilizarlo en python en str
+        document.querySelector('#listaBandaIds').value = listaBandaIds.join(',');
+        document.querySelector('#listaArtistaIds').value = listaArtistaIds.join(',');
+        document.querySelector('#listaJugadorIds').value = listaJugadorIds.join(',');
+        document.querySelector('#listaEquipoIds').value = listaEquipoIds.join(',');
+        
+      }
+      // Asignar la función al evento de clic del botón
+      //document.querySelector('#agregarArtista').addEventListener('click', agregar);
+      
+      document.querySelector(`#agregar${persona}`).onclick = function() { agregar(`{$lista}`, `{$persona}`); };
+      ;
+    </script>
 </body>
 </html>

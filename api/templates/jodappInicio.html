@@ -25,8 +25,9 @@
       {% endwith %}
       <img src="static/logo.jpeg" alt="" width="300" height="300">
       <form action="/creacionEvento" method="post">
-        <input type="hidden" name="usuario" value=context.usuario>
-        <input type="hidden" name="usuarioObjeto" value=context.usuarioObjeto>
+        <input type="hidden" id="usuario" name="usuario" value="{{context.usuario}}">
+        <input type="hidden" id="usuarioObjeto" name="usuarioObjeto" value="{{context.usuarioObjeto}}">
+        <input type="hidden" id="dni" name="dni" value="{{context.dni}}">
         <div class="selectGrupo">
         <button type="submit">Crear Evento</button>
         <select name="tipoEvento">
@@ -37,13 +38,15 @@
         </div>
       </form>
       <form action="/verListaEventos" method="post">
-        <input type="hidden" name="usuario" value=context.usuario>
-        <input type="hidden" name="usuarioObjeto" value=context.usuarioObjeto>
+        <input type="hidden" id="usuario" name="usuario" value="{{context.usuario}}">
+        <input type="hidden" id="usuarioObjeto" name="usuarioObjeto" value="{{context.usuarioObjeto}}">
+        <input type="hidden" id="dni" name="dni" value="{{context.dni}}">
         <button type="submit">Ver listas de eventos</button>
       </form>
       <form action="/verListaDeSusEventos" method="post">
-        <input type="hidden" name="usuario" value=context.usuario>
-        <input type="hidden" name="usuarioObjeto" value=context.usuarioObjeto>
+        <input type="hidden" id="usuario" name="usuario" value="{{context.usuario}}">
+        <input type="hidden" id="usuarioObjeto" name="usuarioObjeto" value="{{context.usuarioObjeto}}">
+        <input type="hidden" id="dni" name="dni" value="{{context.dni}}">
         <button type="submit">Ver listas de sus eventos</button>
       </form>
     </div>

@@ -11,9 +11,9 @@
     <div id="context">
       &#x231A; {{ context.server_time }}
     </div>
-    <div id="homeForm">
-      <h2>Inicio</h2>
-      <h1>Bienvenido {{context.usuarioDict['nombre']}}</h1>
+    <div id="tableForm">
+      <h2>Fiestas</h2>
+      <h1>Lista de Fiestas Creadas</h1>
       {% with mensajes = get_flashed_messages() %}
       {% if mensajes %}
         <ul class=flashes>
@@ -23,41 +23,86 @@
         </ul>
       {% endif %}
       {% endwith %}
-      <img src="static/logo.jpeg" alt="" width="300" height="300">
-      
-      label for="fiestas">Lista Fiestas:</label>
-      {% with context.listaFiestas %}
-      {% if listaFiestas %}
-        <ol class=flashes>
-        {% for fiesta in listaFiestas %}
-          <li>{{ fiesta }}</li>
+      <table>
+        <tr>
+          <th>Nombre</th>
+          <th>Fecha</th>
+          <th>Fecha Fin</th>
+          <th>Precio</th>
+          <th>Capacidad</th>
+          <th>Capacidad Actual</th>
+          <th>Asistentes</th>
+          <th>Rango de Edad</th>
+          <th>Ver fiesta</th>
+        </tr>
+      {% for lista in context.listasFiestas %}
+        <tr>
+          <td>{{ lista[1] }}</td>
+          <td>{{ lista[2] }}</td>
+          <td>{{ lista[3] }}</td>
+          <td>{{ lista[4] }}</td>
+          <td>{{ lista[5] }}</td>
+          <td>{{ lista[6] }}</td>
+          <td>{{ lista[7] }}</td>
+          <td>{{ lista[8] }}</td>
+          <td>
+            <form action="/verFiesta" method="post">
+              <input type="hidden" name="dni" value="{{context.dni}}">
+              <input type="hidden" name="id" value="{{ lista[0] }}">
+              <input type="hidden" name="creador" value="SI">
+              <input type="submit" value="Ver fiesta">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </table>
+    </div>
+    
+    <div id="tableForm", style="display: inline-block;">
+      <h2>Fiestas</h2>
+      <h1>Lista de Fiestas Asistidas</h1>
+      {% with mensajes = get_flashed_messages() %}
+      {% if mensajes %}
+        <ul class=flashes>
+        {% for mensaje in mensajes %}
+          <li>{{ mensaje }}</li>
         {% endfor %}
-        </ol>
+        </ul>
       {% endif %}
       {% endwith %}
-
-      <label for="conciertos">Lista Conciertos:</label>
-      {% with context.listaConciertos %}
-      {% if listaConciertos %}
-        <ol class=flashes>
-        {% for concierto in listaConciertos %}
-          <li>{{ concierto }}</li>
-        {% endfor %}
-        </ol>
-      {% endif %}
-      {% endwith %}
-
-      <label for="matchs">Lista Matchs:</label>
-      {% with context.listaMatchs %}
-      {% if listaMatchs %}
-        <ol class=flashes>
-        {% for match in listaMatchs %}
-          <li>{{ match }}</li>
-        {% endfor %}
-        </ol>
-      {% endif %}
-      {% endwith %}
-
+      <table>
+        <tr>
+          <th>Nombre</th>
+          <th>Fecha</th>
+          <th>Fecha Fin</th>
+          <th>Precio</th>
+          <th>Capacidad</th>
+          <th>Capacidad Actual</th>
+          <th>Asistentes</th>
+          <th>Rango de Edad</th>
+          <th>Ver fiesta</th>
+        </tr>
+      {% for lista in context.listasFiestasAsis %}
+        <tr>
+          <td>{{ lista[1] }}</td>
+          <td>{{ lista[2] }}</td>
+          <td>{{ lista[3] }}</td>
+          <td>{{ lista[4] }}</td>
+          <td>{{ lista[5] }}</td>
+          <td>{{ lista[6] }}</td>
+          <td>{{ lista[7] }}</td>
+          <td>{{ lista[8] }}</td>
+          <td>
+            <form action="/verFiesta" method="post">
+              <input type="hidden" name="dni" value="{{context.dni}}">
+              <input type="hidden" name="id" value="{{ lista[0] }}">
+              <input type="hidden" name="creador" value="NO">
+              <input type="submit" value="Ver fiesta">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </table>
     </div>
     <p id="pie">Grupo 2</p>
 </body>
