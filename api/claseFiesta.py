@@ -1,8 +1,9 @@
 from claseEvento import Evento
-
+# Define una nueva clase llamada Fiesta que hereda de la clase Evento
 # Cuando es una fiesta que ya fue creada, debo pasarle por el constructor todos los datos exactos que tiene en la bd
 class Fiesta(Evento):
     def __init__(self, **kwargs):
+        # Llama al constructor de la clase base Evento utilizando kwargs
         super().__init__(**kwargs)
         self.__vestimenta = kwargs.get('vestimenta')
         self.__bar = kwargs.get('bar')
@@ -10,6 +11,7 @@ class Fiesta(Evento):
         self.__categoria = kwargs.get('categoria')
         self.__bandas = kwargs.get('bandas', [])
 
+    # Getters para obtener atributos específicos de Fiesta
     def getVestimenta(self):
         return self.__vestimenta
     
@@ -26,7 +28,8 @@ class Fiesta(Evento):
         return self.__bandas
     
     #### Polimorfismo ####
-    
+# Polimorfismo: reemplaza los setters de la clase base Evento
+    # para especificar el tipo "Fiestas" en la actualización de Firebase    
     def setNombre(self, valor, firebase):
         super().setNombre(valor, firebase, "Fiestas")
 
@@ -58,8 +61,7 @@ class Fiesta(Evento):
         super().setRango(valor, firebase, "Fiestas")
 
 
-    ####              ####
-    
+    # Setters para establecer atributos específicos de Fiesta y actualizar en Firebase
     def setVestimenta(self, valor, firebase):
         # Primero se cambia en la bd y devuelve True, asi que se cambia del atributo
         if(firebase.editarAtributos("Fiestas", self.getID(), {'vestimenta': valor})):
@@ -81,6 +83,8 @@ class Fiesta(Evento):
         if(firebase.editarAtributos("Fiestas", self.getID(), {'bandas': valor}, "lista")):
             self.__bandas.append(valor)
 
+
+    # Método privado para mostrar las bandas en formato de cadena
     def __mostrarBandas(self):
         bandas=""
         for banda in self.__bandas:
@@ -88,6 +92,8 @@ class Fiesta(Evento):
             bandas+=f"{banda.mostrar()}\n"
         return bandas
 
+    
+# Método para eliminar una banda del evento
     def eliminarBanda(self, idBanda, firebase):
         if idBanda in self.__bandas:
             # Antes se debe eliminar de la bd
@@ -95,14 +101,16 @@ class Fiesta(Evento):
             firebase.eliminarID("Fiestas", self.getID(), 'bandas', idBanda)
             self.__bandas.remove(idBanda)
 
-    #Polimorfismo
+    # Polimorfismo: reemplaza el método eliminarAsistente de la clase base Evento
     def eliminarAsistente(self, idValor, firebase):
         super().eliminarAsistente(idValor, firebase, "Fiestas")
 
+    # Método para mostrar información detallada de la Fiesta, incluyendo sus atributos específicos
     def mostrar(self):
         datosFiesta = super().mostrar()
         return f"{datosFiesta}\nCategoria: {self.__categoria}\nVestimenta: {self.__vestimenta}\nBar: {self.__bar}\nConservadora: {self.__conservadora}\nBandas:\n{self.__mostrarBandas()}\n"
-    
+
+    # Método para convertir el objeto Fiesta en un diccionario, incluyendo atributos específicos
     def objetoToDiccionario(self):
         # El dni no se guarda porque sera el child para guardar el diccioUsuario
         diccioFiesta = super().objetoToDiccionario()
