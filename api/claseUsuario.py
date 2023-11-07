@@ -1,14 +1,22 @@
+# Importa la clase Persona 
 from clasePersona import Persona
-
+# Se define la clase Usuario que hereda de la clase Persona
 class Usuario(Persona):
+    # En el constructor se encuentra **kwargs 
+    # Es el parámetro que nos permite crear objetos a partir de pasarle un diccionario con todos los valores de los atributos
+    # Como la base de datos de Firebase guarda en formato diccionario, es una forma más sencilla de volver a crear los objetos
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.__correo = kwargs.get('correo')
         self.__user = kwargs.get('user')
+        # La siguiente lista guarda los IDs de los eventos creados por el usuario
         self.__listaEventos = kwargs.get('listaEventos', [])
+        # La siguiente lista guarda los DNIs de los amigos del usuario
         self.__listaAmigos = kwargs.get('listaAmigos', [])
+        # La siguiente lista guarda los IDs de los eventos a los que asiste el usuario
         self.__listaEventosAsistidos = kwargs.get('listaEventosAsistidos', [])
-
+    
+    # Metodos Getter para obtener los valores de los atributos
     def getCorreo(self):
         return self.__correo
     
@@ -23,10 +31,14 @@ class Usuario(Persona):
     
     def getAsistencias(self):
         return self.__listaEventosAsistidos
-    # Polimorfismo
+
+    #Metodos Setter donde ocurre polimorfismo
+    # Debido a que ya fueron definidos en la clase Persona
+    # Sin embargo, ahora se les pasa el tipo especifico ("Usuarios")
+    # Necesitan de la instancia de firebase para cambiar sus valores mediante su DNI
     def setDNI(self, valor, firebase):
         super().setDNI(valor, firebase, "Usuarios")
-    # Polimorfismo
+    # Polimorfimos
     def setNombre(self, valor, firebase):
         super().setNombre(valor, firebase, "Usuarios")
     # Polimorfismo
@@ -65,7 +77,7 @@ class Usuario(Persona):
         for amigo in listaAmigosBD:
             amigos+=amigo.mostrar()
         return amigos
-    # Metodo privado para mostrar tanto los eventos Asistidos como los eventos creados
+    # Metodo publico para mostrar tanto los eventos Asistidos como los eventos creados
     def mostrarEventos(self, listaEventosBD, lista="Asistidos", eventoNombre="Eventos"):
         # La listaEventosBD se genera desde clase Firebase mediante el atributo listaEventos o listaEventosAsistidos
         # lista puede ser Asistidos o Creados
@@ -74,13 +86,13 @@ class Usuario(Persona):
         for evento in listaEventosBD:
             eventos+=evento.mostrarLista()
         return eventos
-
+    # Metodo publico para editar un evento mediante el id del mismo que se debe encontrar dentro de la lista de eventos creados por el usuario
     def editarEvento(self, tipo, idEvento, diccio, firebase):
         if idEvento in self.__listaEventos:
             # Se puede editar mediante la bd de firebase
             # Tipo puede ser Fiestas, Conciertos o Matchs
             firebase.editarAtributos(tipo, idEvento, diccio)
-
+    # Metodo publico para eliminar un evento mediante el id del mismo que se debe encontrar dentro de la lista de eventos creados por el usuario
     def eliminarEvento(self, tipo, idEvento, firebase):
         if idEvento in self.__listaEventos:
             # Antes se debe eliminar de la bd
@@ -88,7 +100,7 @@ class Usuario(Persona):
             firebase.eliminarDiccionario(tipo, idEvento)
             firebase.eliminarID("Usuarios", self.getDNI(), 'listaEventos', idEvento)
             self.__listaEventos.remove(idEvento)
-
+    # Metodo publico para eliminar una asistencia mediante el id del evento que se debe encontrar en la lista de eventos asistidos del usuario
     def eliminarAsistencia(self, tipo, idEvento, firebase):
         if idEvento in self.__listaEventosAsistidos:
             # Antes se debe eliminar de la bd
@@ -99,7 +111,7 @@ class Usuario(Persona):
             firebase.eliminarID("Usuarios", self.getDNI(), "listaEventosAsistidos", idEvento)
             # Se elimina de la lista de eventos asistidos del objeto
             self.__listaEventosAsistidos.remove(idEvento)
-
+    # Metodo publico para eliminar un amigo mediante el idAmigo que debe encontrarse dentro de la lista de amigos del usuario
     def eliminarAmigo(self, idAmigo, firebase):
         if idAmigo in self.__listaAmigos:
             #Antes se debe eliminar al self como amigo de este
@@ -109,11 +121,10 @@ class Usuario(Persona):
             firebase.eliminarID("Usuarios", idAmigo, "listaAmigos", self.getDNI())
             self.__listaAmigos.remove(idAmigo)
 
-    #Correo: {self.__correo}\n el correo no se deberia mostrar
-    # Polimorfismo
+    # En este metodo publico ocurre polimorfismo ya que vuelve a definise mostrando los datos especificos del usuario
     def mostrar(self):
         return f"{super().mostrar()}Usuario: {self.__user}\n"
-    # Polimorfismo
+    # En este metodo publico ocurre polimorfismo ya que vuelve a definirse convirtiendo al objeto Usuario en un diccionario
     def objetoToDiccionario(self):
         # El dni no se guarda porque sera el child para guardar el diccioUsuario
         diccioUsuario = super().objetoToDiccionario()
