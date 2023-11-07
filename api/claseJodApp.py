@@ -156,8 +156,10 @@ class JodApp:
         fiestaObj = fiestaObj[0]
         if(accion=='asistir'):
             fiestaObj.setAsistente(dni, self.firebase)
+            flash(f"¡Ahora asiste a la fiesta '{fiestaDict['nombre']}'!", 'evento')
         elif(accion == "noAsistir"):
             fiestaObj.eliminarAsistente(dni, self.firebase)
+            flash(f"Ya no asiste a la fiesta '{fiestaDict['nombre']}'.", 'evento')
         elif(accion=='editar'):
             nombre = datos.get('nombre')
             descripcion = datos.get('descripcion')
