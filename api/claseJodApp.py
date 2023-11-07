@@ -131,7 +131,8 @@ class JodApp:
         # objeto de io.BytesIO que contiene los datos de la imagen
         imagenCodificada = base64.b64encode(output.getvalue()).decode('utf-8')
         return imagenCodificada
-    
+
+    # Este metodo privado obtiene los diccionarios con sus ids rescatados de lista de diccionarios Pyre
     def __obtenerDictConIds(self, listaDictPyre, clave):
         listaDict = []
         for dictPyre in listaDictPyre:
@@ -139,63 +140,74 @@ class JodApp:
             dictNuevo[clave] = dictPyre.key()
             listaDict.append(dictNuevo)
         return listaDict
-    
+    # Metodo privado para crear objetos de tipo Artista
     def __crearObjetosArtista(self, listaDict):
         listaArtista = []
         for diccio in listaDict:
+            # instacia de cada artista por el diccionario que contiene los valores de sus atributos
             artistaNuevo = Artista(**diccio)
             listaArtista.append(artistaNuevo)
         return listaArtista
-    
+    # Metodo privado para crear objetos de tipo Banda
     def __crearObjetosBanda(self, listaDict):
         listaBanda = []
         for diccio in listaDict:
-            print(diccio['integrantes'])
-            #artistas = self.firebase.obtenerListaDiccionarios('Artistas', diccio['integrantes'])
-            #listaArtista = self.__crearObjetosArtista(artistas)
-            #diccio['integrantes'] = listaArtista
+            # inicializa una lista vacia de artistas
             listaArtista = []
             for integrante in diccio['integrantes']:
+                # realiza una instancia de cada artista por el dni de estos consiguiendo sus datos
                 artista = Artista(**integrante)
                 listaArtista.append(artista)
+            # se guardan los objetos artista en una lista en la clave integrantes
             diccio['integrantes'] = listaArtista
+            # se realiza una instancia de la clase Banda con los datos en el diccio
             bandaNueva = Banda(**diccio)
             listaBanda.append(bandaNueva)
         return listaBanda
-
+    # metodo privado para crear objetos de tipo Fiesta
     def __crearObjetosFiesta(self, listaDict):
         listaFiesta = []
         for diccio in listaDict:
             if 'bandas' in diccio:
-                #flash(diccio['bandas'])
+                # Se obtienen los diccionarios de tipo Banda
                 bandas = self.firebase.obtenerListaDiccionarios('Bandas', diccio['bandas'])
-                #flash(bandas)
+                # En la lista de bandas utiliza el metodo crearObjetosBandas para crear las bandas y guardarlas en la lista
                 listaBanda = self.__crearObjetosBanda(bandas)
                 diccio['bandas'] = listaBanda
             fiestaNueva = Fiesta(**diccio)
+            # en la listaFiesta agrega el objeto Fiesta creado
             listaFiesta.append(fiestaNueva)
         return listaFiesta
-
+    # Metodo publico que se acciona al apretar alguno de los botones cuando se visualiza un Evento de tipo Fiesta
     def accionEvento(self):
+        # obtiene la accion que puede ser asistir, noAsistir o editar
         accion = request.form.get('accion')
+        # Transforma los datos a un diccionario
         datos = request.form.to_dict()
-        #flash(datos)
+        # Obtiene el ID del evento y el DNI del usuario
         idFiesta = datos.get('idEvento')
         dni = datos.get('dni')
-        print(idFiesta)
+        # Obtiene la fiesta especifica por su idFiesta en formato diccionario Pyre
         listaFiestaDictPyre = self.firebase.obtenerListaDiccionarios("Fiestas", [idFiesta])
         listaFiestaDictPyre = listaFiestaDictPyre[0]
         fiestaDict = listaFiestaDictPyre.val()
+        # Lo transforma a un diccionario normal con la clave id guardando el idFiesta
         fiestaDict['id'] = idFiesta
+        # Crea el objeto fiesta
         fiestaObj = self.__crearObjetosFiesta([fiestaDict])
         fiestaObj = fiestaObj[0]
         if(accion=='asistir'):
+            # Si apreto el boton de asistencia entonces marca la asistencia del usuario en la fiesta
             fiestaObj.setAsistente(dni, self.firebase)
+            # Envia el mensaje al html por medio de flash
             flash(f"¡Ahora asiste a la fiesta '{fiestaDict['nombre']}'!", 'evento')
         elif(accion == "noAsistir"):
+            # Si apreto el boton de eliminar asistentcia, entonces quita la asistencia de ese usuario de la fiesta
             fiestaObj.eliminarAsistente(dni, self.firebase)
+            # Envia el mensaje al html por medio de flash
             flash(f"Ya no asiste a la fiesta '{fiestaDict['nombre']}'.", 'evento')
         elif(accion=='editar'):
+            # Obtiene todos los datos y los cambia si estos son distintos al apretar el boton de editar
             nombre = datos.get('nombre')
             descripcion = datos.get('descripcion')
             fecha = datos.get('fecha')
@@ -237,9 +249,12 @@ class JodApp:
                 fiestaObj.setBar(bar, self.firebase)
             if(conservadora!=fiestaObj.getConservadora()):
                 fiestaObj.setConservadora(conservadora, self.firebase)
+            # Envia el mensaje al html por medio de flash
             flash("La fiesta ha sido modificada con los valores nuevos.", 'evento')
         elif(accion=='eliminar'):
+            # Eliminar la fiesta al apretar el boton de eliminar
             self.firebase.eliminarDiccionario("Fiestas", idFiesta)
+            # Envia el mensaje al html por medio de flash
             flash("La fiesta ha sido eliminada de la base de datos", 'evento')
         usuarioValido = self.firebase.obtenerListaDiccionarios("Usuarios", [dni])
         usuarioValido = usuarioValido[0]
