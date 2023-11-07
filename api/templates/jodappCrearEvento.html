@@ -54,8 +54,9 @@
         </ul>
       {% endif %}
       {% endwith %}
-      <!-- CREAR EVENTO -->
+      <!-- Formulario para crear un evento -->
       <form method="POST", action="/crearEvento">
+        <!-- Campos de entrada para los detalles del evento -->
         <div class="inputGrupo">
           <label for="nombre">Nombre:</label>
           <input type="text" id="nombre" name="nombre"><br>
@@ -152,6 +153,7 @@
         <button type="submit">Crear {{context.evento}}</button>
       </form>
     </div>
+     <!-- Condición para mostrar campos adicionales si el evento es una Fiesta -->
     {% if context.evento != 'Match' %}
     
     <div id="crearEventoForm", style="display: inline-block;">
