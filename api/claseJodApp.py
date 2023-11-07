@@ -390,7 +390,7 @@ class JodApp:
             diccioDatos['anfitrion'] = dni
             diccioDatos['ubicacion'] = [ubicacionLatitud, ubicacionLongitud, ubicacionDescrip]
             if(evento=='Fiesta'):
-
+                # En el caso de que sea un evento de tipo Fiesta entonces elimina las claves 
                 if(bandas!=['']):
                     diccioDatos['bandas'] = diccioDatos['listaBandaIds']
                 else:
@@ -417,7 +417,7 @@ class JodApp:
         context = { 'server_time': self.__formatoServidorTiempo(), 'usuario':usuarioDict, 'dni':dni, 'usuarioObjeto':usuarioObj, 'evento':evento, 'dictGrupo':dictGrupo, 'dictPerso': dictPerso }
         return render_template('jodappCrearEvento.html', context=context)
 
-
+    # Metodo publico para crear una banda
     def crearBanda(self):
         diccioDatos = request.form.to_dict()
         
@@ -431,6 +431,7 @@ class JodApp:
         artistas = request.form.get('listaArtistaIds').split(',')
         condi = not nombre or not genero or artistas==['']
         if(condi):
+            # Si alguno de los campos esta vacio no crea la banda y envia el mensaje respectivo al html
             if(not nombre):
                 flash("El nombre de la banda no puede estar vacío", 'banda')
             if(not genero):
@@ -438,28 +439,31 @@ class JodApp:
             if(artistas==['']):
                 flash("La banda debe tener al menos un artista agregado.", 'banda')
         else:
-            #print(f"ARTISTAS:: {artistas}")
+            # obtiene los artistas en formato diccionario Pyre
             artistasDictPyre = self.firebase.obtenerListaDiccionarios("Artistas", artistas)
+            # convierta a diccionarios normales y luego a una lista de objetos de tipo Artista
             artistasDict = self.__obtenerDictConIds(artistasDictPyre, "dni")
             artistasObj = self.__crearObjetosArtista(artistasDict)
-            #print(lista[0].key())
-            #print(lista[1].val())
+            # crea el diccionario con los datos de banda
             diccioBanda = {'nombre':nombre, 'genero':genero, 'integrantes':artistasObj}
             # Se crea un objeto de tipo Banda 
             bandaNueva = Banda(**diccioBanda)
             diccioBanda['integrantes'] = artistasDict
             self.firebase.guardarDiccionario("Bandas", diccioBanda)
+            # Envia el mensaje al html
             flash(f"¡Felicidades, la banda {nombre} se creo exitosamente!", 'banda')
 
         dictGrupo, dictPerso = self.listGrupoIntegrantes(evento)
         usuarioDict = diccioDatos.get('usuario')
         usuarioObj = diccioDatos.get('usuarioObj')
+        # Renderiza el html jodappCrearEvento
         context = { 'server_time': self.__formatoServidorTiempo(), 'usuario':usuarioDict, 'usuarioObjeto':usuarioObj, 'evento':evento, 'dictGrupo':dictGrupo, 'dictPerso': dictPerso }
         return render_template('jodappCrearEvento.html', context=context)
 
 
-
+    # Metodo publico para crear un artista
     def crearArtista(self):
+        # Obtiene todos los valores para crear un artista
         diccioDatos = request.form.to_dict()
         evento = diccioDatos.get('tipoEvento')
         dni = diccioDatos.get('dni')
@@ -469,6 +473,7 @@ class JodApp:
         talento = diccioDatos.get('talento')
         condi = not dni or not nombre or not apellido or not edad or not talento
         if(condi):
+            # Si algun campo no esta ingresado informa mediante flash
             if(not nombre):
                 flash("El nombre del artista no puede estar vacío.", 'artista')
             if(not dni):
@@ -480,23 +485,25 @@ class JodApp:
             if(not talento):
                 flash("El talento del artista no puede estar vacío.", 'artista')
         else:
+            # Realiza una instancia de Artista
             artistaNew = Artista(**diccioDatos)
             diccioArtista = artistaNew.objetoToDiccionario()
             self.firebase.guardarDiccionario("Artistas", diccioArtista, dni)
             flash(f"¡Felicidades, el artista {nombre} se creo exitosamente!", 'artista')
-
+        # Obtiene el diccionario de grupo y personas
         dictGrupo, dictPerso = self.listGrupoIntegrantes(evento)
         usuarioDict = diccioDatos['usuario']
         usuarioObj = diccioDatos['usuarioObj']
+        # Renderiza el html jodappCrearEvento
         context = { 'server_time': self.__formatoServidorTiempo(), 'usuario':usuarioDict, 'usuarioObj':usuarioObj, 'evento':evento, 'dictGrupo':dictGrupo, 'dictPerso': dictPerso }
         return render_template('jodappCrearEvento.html', context=context)
 
-
+    # Metodo publico para crear un Jugador
     def crearJugador(self):
         evento = request.form['tipoEvento']
         diccioDatos = request.form.to_dict()
         self.creacionEvento(evento)
-
+    # Metodo publico para crear un Equipo
     def crearEquipo(self):
         evento = request.form['tipoEvento']
         self.creacionEvento(evento)
@@ -504,16 +511,16 @@ class JodApp:
     # Serian los eventos creados y eventos asistidos del usuario
     def verListaDeSusEventos(self):
         dni = request.form['dni']
-
+        # Obtiene todos los distintos eventos que creo el usuario por el DNI
         listaFiestas = self.firebase.recuperarTodosDict("Fiestas", dni)
         listaObjFiestas = self.__crearObjetosFiesta(listaFiestas)
         listaDatosFiestas = self.__listaDatosEventos(listaObjFiestas)
-
+        # Obtiene todos los distintos eventos a los que asiste el usuario por el DNI y pasandole True
         listaFiestasAsis = self.firebase.recuperarTodosDict("Fiestas", dni, True)
         listaObjFiestasAsis = self.__crearObjetosFiesta(listaFiestasAsis)
         listaDatosFiestasAsis = self.__listaDatosEventos(listaObjFiestasAsis)
 
-
+        # Lo mismo sucede con conciertos y matchs
         listaConciertos = self.firebase.recuperarTodosDict("Conciertos", dni)
         listaObjConciertos = self.__crearObjetosFiesta(listaConciertos)
         listaDatosConciertos = self.__listaDatosEventos(listaObjConciertos)
@@ -530,22 +537,25 @@ class JodApp:
         listaMatchsAsis = self.firebase.recuperarTodosDict("Matchs", dni, True)
         listaObjMatchsAsis = self.__crearObjetosFiesta(listaMatchsAsis)
         listaDatosMatchsAsis = self.__listaDatosEventos(listaObjMatchsAsis)
-
+        # Renderiza el html jodappListaDeSusEventos con las listas de los eventos, en este caso solo muestran los datos de Fiestas
         context = { 'server_time': self.__formatoServidorTiempo(), 'dni':dni, 'listasFiestas':listaDatosFiestas, 'listasFiestasAsis':listaDatosFiestasAsis}
         return render_template('jodappListaDeSusEventos.html', context=context)
-    
+
+    # Metodo publico para ver los eventos
     # Serian todos los eventos que existen
     def verListaEventos(self):
+        # Obtiene el usuario en formato diccionario y objeto pasados anteriormente
         usuarioDict = request.form['usuario']
         usuarioObj = request.form['usuarioObjeto']
+        # Obtiene el dni del usuario
         dni = request.form['dni']
+        # Inicializa las variables que guardan los graficos de las fiestas mas asistidas
         imagenCodificadaTorta = ""
         imagenCodificadaBarras = ""
-        #listaConciertos = self.firebase.recuperarTodosDict("Conciertos")
-        #listaMatchs = self.firebase.recuperarTodosDict("Matchs")
-
+        # Obtiene la lista de fiestas, para convertirlas en objetos y luego convertirlos en datos de los mismos
         listaFiestas = self.firebase.obtenerTodosDictConKey('Fiestas')
         listaObjFiestas = self.__crearObjetosFiesta(listaFiestas)
+        # Estos datos se pasaran al html para ser visualizados en lista ordenada de mayores asistentes a menos
         listaDatosFiestas = self.__listaDatosEventos(listaObjFiestas)
         # Ordena la lista segun la cantidad de asistentes que esta guardado en el indice 7
         listaDatosFiestas  = sorted(listaDatosFiestas , key=lambda i: i[7])
@@ -565,7 +575,7 @@ class JodApp:
         imagenCodificadaBarras = self.__graficoBarrasMasAsistentes(listaOrdenada)
         context = { 'server_time': self.__formatoServidorTiempo(), 'dni':dni, 'listasFiestas':listaDatosFiestas, 'graficoTorta':imagenCodificadaTorta, 'graficoBarra': imagenCodificadaBarras}
         return render_template('jodappListaEventos.html', context=context)
-
+    # Metodo publico para obtener diccionarios de grupo e integrantes
     def listGrupoIntegrantes(self, eventoSeleccionado):
         if(eventoSeleccionado!="Match"):
             # Si es Fiesta o Concierto se guardan bandas y artistas
@@ -576,9 +586,8 @@ class JodApp:
             dictGrupo = self.firebase.recuperarTodosDict("Equipos")
             dictPerso = self.firebase.recuperarTodosDict("Jugadores")
         return [dictGrupo, dictPerso]
-
+    # Metodo publico para crear el Evento
     def creacionEvento(self, actualizacion=False):
-
         if(actualizacion!=False):
             # En el caso de que sea distinta de falsa, quiere decir que tiene el evento seleccionado
             eventoSeleccionado = actualizacion
@@ -586,26 +595,33 @@ class JodApp:
             # Obtenemos el tipo de evento que se selecciono para crear (Fiesta, Concierto, Match)
             # En el caso de que la actualizacion sea falsa
             eventoSeleccionado = request.form['tipoEvento']
+        # Se obtienen los grupos y personas segun que evento es (Fiesta, Concierto, Match)
         dictGrupo, dictPerso = self.listGrupoIntegrantes(eventoSeleccionado)
+        # Se obtienen los datos del usuario, diccionario, objeto, y su dni
         usuario = request.form.get('usuario')
         usuarioObjeto = request.form.get('usuarioObjeto')
         dni = request.form.get('dni')
+        # Se renderiza el html jodappCrearEvento pasandole los datos dni, usuario, etc por el context
         context = { 'server_time': self.__formatoServidorTiempo(), 'dni':dni, 'usuario':usuario, 'usuarioObjeto':usuarioObjeto, 'evento':eventoSeleccionado, 'dictGrupo':dictGrupo, 'dictPerso': dictPerso }
         return render_template('jodappCrearEvento.html', context=context)
-    
+    # Metodo publico que inicia el principio de la app web
     def home(self):
+        # Renderiza el html index con la hora actual
         context = { 'server_time': self.__formatoServidorTiempo() }
         return render_template('index.html', context=context)
-
+    # Metodo publico que inicia el html del logueo
     def login(self):
+        # Renderiza el html login con la hora actual
         context = { 'server_time': self.__formatoServidorTiempo() }
         return render_template('login.html', context=context)
-
+    # Metodo publico que inicia el html de inicio de sesion
     def signup(self):
+        # Renderiza el html signup con la hora actual
         context = { 'server_time': self.__formatoServidorTiempo() }
         return render_template('signup.html', context=context)
-    
+    # Metodo publico para reestablecer la contrasenna mediante el correo ingresado
     def reestablecerContrasenna(self):
+        # Se obtiene el correo del usuario ingresado
         correo = request.form.get('correo')
         try:
             self.firebase.autenticacion.send_password_reset_email(correo)
