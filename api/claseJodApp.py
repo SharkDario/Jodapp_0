@@ -268,14 +268,16 @@ class JodApp:
         # Vuelve a la pantalla de inicio
         context = { 'server_time': self.__formatoServidorTiempo(), 'dni':dni, 'usuario': usuarioValido, 'usuarioObjeto': usuarioObjeto}
         return render_template('jodappInicio.html', context=context)
-
+    #Metodo publico para ver la Fiesta
     def verFiesta(self):
         idFiesta = request.form.get('id')
         dni = request.form.get('dni')
         creador = request.form.get('creador')
         print("creador: ddd", creador)
         asistencia = "NO"
-        #creador = "NO"
+        #Si el creador es SI quiere decir que lo recupera por el dni a las fiestas
+        # Si es NO quiere decir que lo recupera para saber si es asistente a esta, 
+        # Si no es NOOO quiere decir que no asiste ni es creador y recupera todas las fiestas
         if(creador=="SI"):
             listaFiestas = self.firebase.recuperarTodosDict("Fiestas", dni)
         elif(creador=="NO"):
@@ -287,6 +289,7 @@ class JodApp:
         listaObjFiestas = self.__crearObjetosFiesta(listaFiestas)
         fiestaObj = ""
         anfitrion = ""
+        # Obtiene la fiesta especifica por el ID
         for fiesta in listaObjFiestas:
             if(fiesta.getID()==idFiesta):
                 anfitrion = fiesta.getAnfitrion()
@@ -297,15 +300,16 @@ class JodApp:
                     asistencia = "SI"
                 fiestaObj = fiesta
                 break
-        #fiestaPyre = self.firebase.obtenerListaDiccionarios("Fiestas", [idFiesta])
-        
+        # Conviere el objeto fiesta en un diccionario
         dictFiesta = fiestaObj.objetoToDiccionario()
+        # Tambien envia el id de la fiesta al mismo
         dictFiesta['id'] = idFiesta
-        #listaDatosFiestas = self.__listaDatosEventos(listaObjFiestas)
+        # Envia al html el diccionario de fiesta para ser visualizado en el html
         context = { 'server_time': self.__formatoServidorTiempo(), 'fiesta':dictFiesta, 'evento':"Fiesta", 'dni':dni, 'dniCreador':anfitrion, 'asistencia':asistencia}
         return render_template('jodappVerEvento.html', context=context)
-
+    # Metodo publico para crear el Evento
     def crearEvento(self):
+        # Obtiene todos los valores necesarios para crear un evento
         diccioDatos = request.form.to_dict()
         evento = diccioDatos.get('tipoEvento')
         ubicacionDescrip = diccioDatos.get('ubicacionD')
@@ -320,6 +324,7 @@ class JodApp:
         edadMin = diccioDatos.get('edadMin')
         edadMax = diccioDatos.get('edadMax')
         dni = request.form.get('dni')
+        # Ve si el rango no es valido
         if edadMin is None or edadMax is None:
             condiRango = False
         else:
