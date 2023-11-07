@@ -1,6 +1,12 @@
+# Importa la clase Ubicacion, ya que es una clase contenida por Evento
 from claseUbicacion import Ubicacion
 # Define una nueva clase llamada Evento
+# Es una clase abstracta (no se realiza instancia de esta)
+# Es una clase base para las clases Fiesta, Concierto y Grupo
 class Evento():
+    # En el constructor se encuentra **kwargs 
+    # Es el parámetro que nos permite crear objetos a partir de pasarle un diccionario con todos los valores de los atributos
+    # Como la base de datos de Firebase guarda en formato diccionario, es una forma más sencilla de volver a crear los objetos
     def __init__(self, **kwargs):
         # El ID se genera desde la base de datos de Firebase al guardar el objeto,
         # Con el metodo setID se guarda el valor del ID
@@ -14,6 +20,7 @@ class Evento():
         self.__ubicacion = Ubicacion(ubicacion[0], ubicacion[1], ubicacion[2])
         self.__precio = kwargs.get('precio')
         self.__descripcion = kwargs.get('descripcion')
+        # DNI del usuario que creo el evento
         self.__anfitrion = kwargs.get('anfitrion')
         # Si el objeto se crea por primera vez sera una lista vacia
         # En cambio, si ya existe en la base de datos
@@ -62,7 +69,9 @@ class Evento():
     # Setters para establecer atributos del evento
      def setID(self, valor):
         self.__id = valor
-    
+    # Los siguientes Setters utilizan la instancia de la clase Firebase 
+    # Se utiliza para guardar los nuevos valores a la base de datos de firebase
+    # Mediante el ID del evento en cuestion y el tipo que sera asignado en las clases hijas de Evento
     def setNombre(self, valor, firebase, tipo):
         if(firebase.editarAtributos(tipo, self.getID(), {'nombre': valor})):
             self.__nombre = valor
