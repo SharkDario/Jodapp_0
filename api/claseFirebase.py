@@ -1,6 +1,9 @@
+# Importa la configuracion de firebase para poder inicializar la aplicacion Firebase
 from firebaseConfig import config
+# Importa la libreria pyrebase para poder inicializar la aplicacion Firebase
 from pyrebase import pyrebase
-
+# Se define la clase Firebase, que es una clase contenida por la clase JodApp
+# Para manejar la base de datos en tiempo real y la autenticacion
 class Firebase():
     def __init__(self):
         #Inicializa la aplicacion de firebase mediante la configuracion especifica
@@ -9,7 +12,7 @@ class Firebase():
         self.autenticacion = self.firebase.auth()
         #Atributo para gestionar la base de datos en tiempo real
         self.baseDeDatosTR = self.firebase.database()
-
+    
     def getFirebase(self):
         return self.firebase
     
@@ -18,8 +21,7 @@ class Firebase():
         self.autenticacion = self.firebase.auth()
         self.baseDeDatosTR = self.firebase.database()
 
-    # baseDeDatosTR
-    # Validacion de valor distinto (ejemplo: para ingresar nombres de usuario distintos)
+    # Metodo privado para la validar que el atributo sea distinto (ejemplo: para ingresar nombres de usuario distintos)
     # Si ya existe ese valor de atributo, devolvera False, es decir no es distinto
     # Si no existe, devolvera True, es decir es distinto y valido
     def __validacionAtributoDistinto(self, tipo, nombreAtributo, valorAtributoNew):
@@ -34,7 +36,7 @@ class Firebase():
             print("Aun no existe")
         return distinto
     
-    # baseDeDatosTR
+    # Metodo privado para validar que el ID sea distinto
     # Validacion de ID distinto (ejemplo: para ingresar DNIs distintos)
     # Si ya existe ese ID, devolvera False, es decir no es distinto
     # Si no existe, devolvera True, es decir es distinto y valido
@@ -51,7 +53,7 @@ class Firebase():
         return distinto
 
     # autenticacion
-    # El siguiente metodo se utiliza para validar que no exista el correo y guardarlo si es valido al crear el objeto usuario
+    # El siguiente metodo publico se utiliza para validar que no exista el correo y guardarlo si es valido al crear el objeto usuario
     def authCrearUsuario(self, correo, contra):
         try:
             usuario = self.autenticacion.create_user_with_email_and_password(correo, contra)
@@ -61,7 +63,7 @@ class Firebase():
             return False
         
     # autenticacion
-    # El siguiente metodo se utiliza para iniciar sesion
+    # El siguiente metodo publico se utiliza para iniciar sesion
     # Si el correo y contrasenna son correctos, entonces devuelve al usuario
     # Por si luego quiere cambiar el correo o contrasenna
     def authIniciarSesion(self, correo, contra):
@@ -70,7 +72,8 @@ class Firebase():
             return usuario
         except:
             return None
-    
+    # El siguiente metodo publico permite al usuario iniciar sesion mediante su nombre de usuario y la contrasenna
+    # Primero encuentra el correo mediante el nombre de usuario
     def authIniciarSesionUser(self, user, contra):
         usuarios = self.baseDeDatosTR.child("Usuarios").get()
         correo=""
@@ -85,14 +88,12 @@ class Firebase():
             # Esto quiere decir que el usuario inicio sesion correctamente
             if(usuarioValido!=None):
                 print(dni)
-                #usuarioValido = self.obtenerListaDiccionarios(Usuarios, [dni])
-                #usuarioValido = usuarioValido[0]
                 return dni
         # Esto quiere decir que no pudo iniciar sesion, user o contrasenna incorrectos
         return False
 
-    # baseDeDatosTR (DEBO USARLO DENTRO DE CLASE JODAPP)
-    # El siguiente metodo se utiliza para guardar cualquier objeto en formato JSON
+    # baseDeDatosTR
+    # El siguiente metodo publico se utiliza para guardar cualquier objeto en formato JSON
     # Con tipo especificamos en que seccion se guardara, por ejemplo Usuarios
     # Con id especificamos como sera reconocido, en el caso de Personas mediante el DNI
     # diccio seria el objeto ya convertido en diccionario para ser guardado
