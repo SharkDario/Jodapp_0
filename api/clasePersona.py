@@ -1,5 +1,10 @@
-
+# Se define la clase Persona
+# Es una clase abstracta (no se realiza instancia de la misma)
+# Es una clase base para las clases Usuario, Artista y Jugador
 class Persona():
+    # En el constructor se encuentra **kwargs 
+    # Es el parámetro que nos permite crear objetos a partir de pasarle un diccionario con todos los valores de los atributos
+    # Como la base de datos de Firebase guarda en formato diccionario, es una forma más sencilla de volver a crear los objetos
     def __init__(self, **kwargs):
         # Constructor de la clase que inicializa los atributos privados
         self.__dni = kwargs.get('dni')
@@ -19,7 +24,10 @@ class Persona():
     
     def getEdad(self):
         return self.__edad
-    
+
+    # Los metodos setters utilizan la instancia de Firebase para cambiar los valores de los atributos en la base de datos
+    # Estos vuelven a definirse en las clases hijas con el "tipo" especifico
+    # Unicamente un objeto puede modificarse a si mismo, ya que se le pasa como argumento su propio ID/DNI
     def setDNI(self, valor, firebase, tipo):
         # Si se cambio en la bd quiere decir que era un dni distinto a uno existente, y devuelve True
         if(firebase.editarID(tipo, self.getDNI(), valor)):
