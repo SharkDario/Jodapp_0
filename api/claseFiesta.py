@@ -1,14 +1,23 @@
+# Importa la clase Evento
 from claseEvento import Evento
 # Define una nueva clase llamada Fiesta que hereda de la clase Evento
-# Cuando es una fiesta que ya fue creada, debo pasarle por el constructor todos los datos exactos que tiene en la bd
+# Esta es instanciada dentro de la clase JodApp
 class Fiesta(Evento):
+    # En el constructor se encuentra **kwargs 
+    # Es el parámetro que nos permite crear objetos a partir de pasarle un diccionario con todos los valores de los atributos
+    # Como la base de datos de Firebase guarda en formato diccionario, es una forma más sencilla de volver a crear los objetos
     def __init__(self, **kwargs):
         # Llama al constructor de la clase base Evento utilizando kwargs
         super().__init__(**kwargs)
+        # Vestimenta guarda el codigo de vestimenta, como casual, formal, disfraces, etc.
         self.__vestimenta = kwargs.get('vestimenta')
+        # Bar guarda el valor de verdad, True o False, si existe o no en la fiesta
         self.__bar = kwargs.get('bar')
+        # Conservadora guarda el valor de verdad, True o False, si se permite o no llevar conservadora
         self.__conservadora = kwargs.get('conservadora')
+        # Categoria de la fiesta, cumpleannos, aniversario, casamiento
         self.__categoria = kwargs.get('categoria')
+        # Lista que contiene los IDs de las bandas que van a estar en la fiesta
         self.__bandas = kwargs.get('bandas', [])
 
     # Getters para obtener atributos específicos de Fiesta
@@ -27,9 +36,8 @@ class Fiesta(Evento):
     def getBandas(self):
         return self.__bandas
     
-    #### Polimorfismo ####
-# Polimorfismo: reemplaza los setters de la clase base Evento
-    # para especificar el tipo "Fiestas" en la actualización de Firebase    
+    # Metodos Setter donde ocurre polimorfismo debido a que ya fueron definidas dentro de Evento
+    # Vuelven a definirse con el tipo especifico "Fiestas", unicamente una fiesta puede modificarse a si misma
     def setNombre(self, valor, firebase):
         super().setNombre(valor, firebase, "Fiestas")
 
@@ -62,6 +70,7 @@ class Fiesta(Evento):
 
 
     # Setters para establecer atributos específicos de Fiesta y actualizar en Firebase
+    # Unicamente una fiesta puede modificarse a si misma mediante su ID que obtiene mediante el metodo getID
     def setVestimenta(self, valor, firebase):
         # Primero se cambia en la bd y devuelve True, asi que se cambia del atributo
         if(firebase.editarAtributos("Fiestas", self.getID(), {'vestimenta': valor})):
@@ -93,24 +102,26 @@ class Fiesta(Evento):
         return bandas
 
     
-# Método para eliminar una banda del evento
+    # Método publico para eliminar una banda del evento
     def eliminarBanda(self, idBanda, firebase):
         if idBanda in self.__bandas:
             # Antes se debe eliminar de la bd
             # Como es una agregacion solo puedo eliminar el ID de mi listaBandas dentro de la fiesta
             firebase.eliminarID("Fiestas", self.getID(), 'bandas', idBanda)
             self.__bandas.remove(idBanda)
-
-    # Polimorfismo: reemplaza el método eliminarAsistente de la clase base Evento
+    
+    # En este metodo ocurre polimorfismo, elimina un asistente mediante el DNI del usuario y utilizando el metodo de la superclase con el tipo "Fiestas"
     def eliminarAsistente(self, idValor, firebase):
         super().eliminarAsistente(idValor, firebase, "Fiestas")
 
-    # Método para mostrar información detallada de la Fiesta, incluyendo sus atributos específicos
+    # Método publico para mostrar información detallada de la Fiesta, incluyendo sus atributos específicos
+    # En este metodo ocurre polimorfismo debido a que ya fue definido en Evento
     def mostrar(self):
         datosFiesta = super().mostrar()
         return f"{datosFiesta}\nCategoria: {self.__categoria}\nVestimenta: {self.__vestimenta}\nBar: {self.__bar}\nConservadora: {self.__conservadora}\nBandas:\n{self.__mostrarBandas()}\n"
 
-    # Método para convertir el objeto Fiesta en un diccionario, incluyendo atributos específicos
+    # Método publico para convertir el objeto Fiesta en un diccionario, incluyendo atributos específicos
+    # En este metodo ocurre polimorfismo debido a que ya fue definido en Evento
     def objetoToDiccionario(self):
         # El dni no se guarda porque sera el child para guardar el diccioUsuario
         diccioFiesta = super().objetoToDiccionario()
