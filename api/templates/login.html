@@ -9,8 +9,10 @@
 </head>
 <body>
     <div id="loginForm">
+        <!-- Título de la sección -->
       <h2>Inicio</h2>
       <h1>JodApp</h1>
+        <!-- Bloque para mostrar mensajes flash -->
       {% with mensajes = get_flashed_messages() %}
       {% if mensajes %}
         <ul class=flashes>
@@ -20,7 +22,9 @@
         </ul>
       {% endif %}
       {% endwith %}
+        <!-- Formulario para ingresar a la pantalla de inicio por el user y contra -->
       <form method="POST", action="/iniciarSesion">
+          <!-- Campos de entrada para el nombre de usuario y la contraseña -->
         <div class="inputGrupo">
           <label for="username">Usuario:</label>
           <input type="text" id="username" name="username"><br>
