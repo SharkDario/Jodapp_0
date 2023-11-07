@@ -1,11 +1,13 @@
 
 class Persona():
     def __init__(self, **kwargs):
+        # Constructor de la clase que inicializa los atributos privados
         self.__dni = kwargs.get('dni')
         self.__nombre = kwargs.get('nombre')
         self.__apellido = kwargs.get('apellido')
         self.__edad = kwargs.get('edad')
 
+    #Metodos getters y setterss
     def getDNI(self):
         return self.__dni
     
@@ -35,10 +37,12 @@ class Persona():
     def setEdad(self, valor, firebase, tipo):
         if(firebase.editarAtributos(tipo, self.getDNI(), {'edad': valor})):
             self.__edad =valor
-
+        
+    # Método que devuelve una cadena que muestra la información de la persona
     def mostrar(self):
         return f"DNI: {self.__dni}\nNombre: {self.__nombre}\nApellido: {self.__apellido}\nEdad: {self.__edad}\n"
-    
+
+    # Método que convierte la información de la persona en un diccionario
     def objetoToDiccionario(self):
         # El dni no se guarda porque sera el child para guardar el diccio de las clases que heredan Persona
         diccioPersona = {'nombre':self.getNombre(), 'apellido':self.getApellido(), 'edad':self.getEdad()}
