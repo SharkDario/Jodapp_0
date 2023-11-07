@@ -1,7 +1,11 @@
+# Importa la clase Persona
 from clasePersona import Persona
 
 # Define una nueva clase llamada Artista que hereda de la clase Persona
 class Artista(Persona):
+    # En el constructor se encuentra **kwargs 
+    # Es el parámetro que nos permite crear objetos a partir de pasarle un diccionario con todos los valores de los atributos
+    # Como la base de datos de Firebase guarda en formato diccionario, es una forma más sencilla de volver a crear los objetos
     def __init__(self, **kwargs):
         # Llama al constructor de la clase base Persona utilizando kwargs
         super().__init__(**kwargs)
@@ -16,7 +20,10 @@ class Artista(Persona):
         if(firebase.editarID("Artistas", self.getDNI(), valor)):
             self.__talento = valor
 
-    # Métodos de polimorfismo para actualizar datos en Firebase
+    # En los siguientes metodos ocurre polimorfimo
+    # Debido a que ya fueron definidos en la clase Persona
+    # Sin embargo, ahora se les pasa el tipo especifico ("Artistas")
+    # Utilizan la instancia de Firebase para guardar los nuevos valores
     def setDNI(self, valor, firebase):
         super().setDNI(valor, firebase, "Artistas")
 
@@ -29,10 +36,12 @@ class Artista(Persona):
     def setEdad(self, valor, firebase):
         super().setEdad(valor, firebase, "Artistas")
 
-    # Método de polimorfismo para mostrar información del artista
+    # En este metodo publico ocurre polimorfismo debido a que se vuelve a definir 
+    # Mostrando tambien los datos especificos de Artista
     def mostrar(self):
         return f"{super().mostrar()}Talento: {self.__talento}\n"
-    # Método de polimorfismo para convertir el objeto Artista en un diccionario
+    # En este metodo publico ocurre polimorfismo debido a que se vuelve a definir 
+    # Para convertir el objeto Artista en un diccionario
     def objetoToDiccionario(self):
         # Convierte los datos de la persona en un diccionario
         # El dni no se guarda porque sera el child para guardar el diccioArtista
