@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <!-- Ajuste de la vista para dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>JodApp</title>
+    <!-- Enlace al archivo CSS para estilos -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Icono de la página web -->
     <link rel="icon" href="{{ url_for('static', filename='logo.jpeg') }}" type="image/jpeg">
 </head>
 <body>
@@ -12,8 +15,10 @@
       &#x231A; {{ context.server_time }}
     </div>
     <div id="homeForm">
+        <!-- Título de la sección -->
       <h2>Inicio</h2>
       <h1>Bienvenido {{context.usuario['nombre']}}</h1>
+        <!-- Bloque para mostrar mensajes flash -->
       {% with mensajes = get_flashed_messages() %}
       {% if mensajes %}
         <ul class=flashes>
@@ -24,6 +29,7 @@
       {% endif %}
       {% endwith %}
       <img src="static/logo.jpeg" alt="" width="300" height="300">
+        <!-- Formulario para crear un evento -->
       <form action="/creacionEvento" method="post">
         <input type="hidden" id="usuario" name="usuario" value="{{context.usuario}}">
         <input type="hidden" id="usuarioObjeto" name="usuarioObjeto" value="{{context.usuarioObjeto}}">
@@ -37,12 +43,14 @@
         </select>
         </div>
       </form>
+        <!-- Formulario para ver la lista de todos los eventos -->
       <form action="/verListaEventos" method="post">
         <input type="hidden" id="usuario" name="usuario" value="{{context.usuario}}">
         <input type="hidden" id="usuarioObjeto" name="usuarioObjeto" value="{{context.usuarioObjeto}}">
         <input type="hidden" id="dni" name="dni" value="{{context.dni}}">
         <button type="submit">Ver listas de eventos</button>
       </form>
+        <!-- Formulario para ver la lista de sus eventos creados y asistidos -->
       <form action="/verListaDeSusEventos" method="post">
         <input type="hidden" id="usuario" name="usuario" value="{{context.usuario}}">
         <input type="hidden" id="usuarioObjeto" name="usuarioObjeto" value="{{context.usuarioObjeto}}">
