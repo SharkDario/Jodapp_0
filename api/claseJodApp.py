@@ -636,7 +636,7 @@ class JodApp:
         # Vuelve a la pantalla de signup con el respectivo mensaje flash
         context = { 'server_time': self.__formatoServidorTiempo() }
         return redirect(url_for('login', context=context))
-
+    # Metodo publico para iniciar sesion mediante el nombre de usuario y la contrasenna
     def iniciarSesion(self):
         user = request.form.get('username')
         contra = request.form.get('password')
@@ -656,23 +656,22 @@ class JodApp:
                 # usuarioValido seria el usuario de tipo diccionario
                 usuarioValido = usuarioValido.val()
                 # usuarioObjeto seria el usuario de tipo objeto
-                #print(usuarioValido)
                 # Pone al child como una clave valor mas para la creacion del objeto Usuario
                 usuarioValido['dni'] = dni
-                #flash(usuarioValido)
                 # Crea el usuario a partir del diccionario
                 usuarioObjeto = Usuario(**usuarioValido)
-                #flash(usuarioObjeto)
-                #print(usuarioObjeto.getAsistencias())
+                # Renderiza el html jodappInicio, pasandole el dni, el usuariovalido, etc por el context
+                # Pudo ingresar con exito
                 context = { 'server_time': self.__formatoServidorTiempo(), 'dni':dni, 'usuario': usuarioValido, 'usuarioObjeto': usuarioObjeto}
                 return render_template('jodappInicio.html', context=context)
-            
+            #Envia el mensaje de usuario y/o constrasenna incorrectos
             flash("Usuario y/o contraseña incorrectos")
         # Vuelve a la pantalla de signup con el respectivo mensaje flash
         context = { 'server_time': self.__formatoServidorTiempo() }
         return redirect(url_for('login', context=context))
-        
+    # Metodo publico para poder registrarse 
     def registrarte(self):
+        # Obtiene todos los datos necesarios para crear un usuario
         dni = request.form.get('dni')
         nombre = request.form.get('nombre')
         apellido = request.form.get('apellido')
@@ -728,6 +727,6 @@ class JodApp:
         # Vuelve a la pantalla de registro con el respectivo mensaje flasj
         context = { 'server_time': self.__formatoServidorTiempo() }
         return redirect(url_for('signup', context=context))
-
+    # Metodo publico para ejecutar la aplicacion
     def run(self):
         self.app.run(debug=True)
