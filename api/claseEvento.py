@@ -67,7 +67,7 @@ class Evento():
         return self.__rango
 
     # Setters para establecer atributos del evento
-     def setID(self, valor):
+    def setID(self, valor):
         self.__id = valor
     # Los siguientes Setters utilizan la instancia de la clase Firebase 
     # Se utiliza para guardar los nuevos valores a la base de datos de firebase
