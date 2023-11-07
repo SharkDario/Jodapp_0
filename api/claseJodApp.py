@@ -9,10 +9,7 @@ from claseArtista import Artista
 #from claseEquipo import Equipo
 import matplotlib.pyplot as plt
 import io, base64
-#import matplotlib.figure as figure
-#import matplotlib.backends.backend_agg as backend_agg
 import matplotlib
-#from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import time
 
 class JodApp:
@@ -36,6 +33,7 @@ class JodApp:
         self.app.route('/crearEquipo', methods=['POST', 'GET'])(self.crearEquipo)
         self.app.route('/verFiesta', methods=['POST'])(self.verFiesta)
         self.app.route('/accionEvento', methods=['POST'])(self.accionEvento)
+        self.app.route('/reestablecerContrasenna', methods=['POST'])(self.reestablecerContrasenna)
     
     def __formatoServidorTiempo(self):
         servidorTiempo = time.localtime()
@@ -550,6 +548,22 @@ class JodApp:
         context = { 'server_time': self.__formatoServidorTiempo() }
         return render_template('signup.html', context=context)
     
+    def reestablecerContrasenna(self):
+        correo = request.form.get('correo')
+        try:
+            self.firebase.autenticacion.send_password_reset_email(correo)
+            usuarios = self.firebase.baseDeDatosTR.child("Usuarios").get()
+            for usuario in usuarios.each():
+                if(usuario.val()['correo'] == correo):
+                    nombreUsuario = usuario.val()['user']
+                    break
+            flash(f"Correo electrónico para reestablecer la contraseña enviado para el usuario: '{nombreUsuario}'.")
+        except Exception as e:
+            flash("El correo electrónico no existe en la base de datos.")
+        # Vuelve a la pantalla de signup con el respectivo mensaje flash
+        context = { 'server_time': self.__formatoServidorTiempo() }
+        return redirect(url_for('login', context=context))
+
     def iniciarSesion(self):
         user = request.form.get('username')
         contra = request.form.get('password')
