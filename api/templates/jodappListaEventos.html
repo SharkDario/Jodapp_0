@@ -12,8 +12,10 @@
       &#x231A; {{ context.server_time }}
     </div>
     <div id="tableForm">
+        <!-- Título de la sección -->
       <h2>Fiestas</h2>
       <h1>Lista de Fiestas</h1>
+         <!-- Bloque para mostrar mensajes flash -->
       {% with mensajes = get_flashed_messages() %}
       {% if mensajes %}
         <ul class=flashes>
@@ -23,6 +25,7 @@
         </ul>
       {% endif %}
       {% endwith %}
+        <!-- Tabla para mostrar la lista de fiestas -->
       <table>
         <tr>
           <th>Nombre</th>
@@ -35,6 +38,7 @@
           <th>Rango de Edad</th>
           <th>Ver fiesta</th>
         </tr>
+           <!--Cada dato especifico de cada fiesta -->
       {% for lista in context.listasFiestas %}
         <tr>
           <td>{{ lista[1] }}</td>
@@ -46,6 +50,7 @@
           <td>{{ lista[7] }}</td>
           <td>{{ lista[8] }}</td>
           <td>
+              <!-- Formulario para ver los detalles de la fiesta -->
             <form action="/verFiesta" method="post">
               <input type="hidden" name="dni" value="{{context.dni}}">
               <input type="hidden" name="id" value="{{ lista[0] }}">
@@ -57,6 +62,7 @@
       {% endfor %}
       </table>
     </div>
+    <!-- Bloque para mostrar los gráficos -->
     <div id="graficoForm">
       <img src="data:image/png;base64,{{ context.graficoTorta }}" alt="Gráfico">
     </div>
