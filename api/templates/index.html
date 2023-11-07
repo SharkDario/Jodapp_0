@@ -2,18 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <!-- Ajuste de la vista para dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>JodApp</title>
+    <!-- Enlace al archivo CSS para estilos -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Icono de la página web -->
     <link rel="icon" href="{{ url_for('static', filename='logo.jpeg') }}" type="image/jpeg">
 </head>
 <body>
+    <!-- Muestra la hora del servidor -->
     <div id="context">
       &#x231A; {{ context.server_time }}
     </div>
     <div id="homeForm">
+        <!-- Título de la sección -->
       <h2>Home</h2>
       <h1>Bienvenido a JodApp</h1>
+        <!-- Bloque para mostrar mensajes flash -->
       {% with mensajes = get_flashed_messages() %}
       {% if mensajes %}
         <ul class=flashes>
@@ -24,9 +30,11 @@
       {% endif %}
       {% endwith %}
       <img src="static/logo.jpeg" alt="" width="300" height="300">
+        <!-- Formulario para iniciar sesión -->
       <form action="/login" method="get">
         <button type="submit">Acceder</button>
       </form>
+        <!-- Formulario para registrarse -->
       <form action="/signup" method="get">
         <button type="submit">Regístrate</button>
       </form>
