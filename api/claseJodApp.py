@@ -1,5 +1,12 @@
-
+# Se importan los siguientes recursos para crear la aplicacion Flask
+# Flask clase principal para instanciar una app Flask
+# render_template genera una pagina web a partir de un html y datos
+# request representa la solicitud HTTP del cliente
+# flash almacena mensajes que seran recuperados por los html al ser renderizados
+# redirect genera una respuesta que redirige al cliente a un URL diferente
+# url_for genera una URL para un punto final
 from flask import Flask, render_template, request, flash, redirect, url_for
+# Se importan las siguientes clases de las cuales se instanciaran objetos de las mismas dentro de la clase JodApp
 from claseFirebase import Firebase
 from claseUsuario import Usuario
 from claseFiesta import Fiesta
@@ -7,16 +14,27 @@ from claseBanda import Banda
 from claseArtista import Artista
 #from claseJugador import Jugador
 #from claseEquipo import Equipo
+# Se importa los siguientes recursos de matplotlib para realizar graficos y codificarlos para mostrarlos dentro de la app web
 import matplotlib.pyplot as plt
 import io, base64
 import matplotlib
+# Se importa time para el tiempo en ese momento del servidor
 import time
-
+# Se define la clase JodApp, es la clase principal que permite a la app web de Flask funcionar
+# Tiene asociaciones con todas las clase importadas, ya que realiza instancias de las mismas en los distintos metodos
+# Tiene una relacion de composicion con la clase Firebase, ya que necesita de la misma para la base de datos en tiempo real y la autenticacion de Firebase
+# Tambien tiene una relacion de composicion con la clase Flask, ya que realiza una instancia de la misma
 class JodApp:
+    # Constructor de la clase JodApp
     def __init__(self):
+        # Los atributos son publicos debido a que es necesario para que la aplicacion funcione correctamente entre clases
+        # Se realiza una instancia de la clase Firebase
         self.firebase = Firebase()
+        # Se realiza una instancia de la clase Flask para la aplicacion web
         self.app = Flask(__name__)
+        # Genera una clave secreta para la sesion
         self.app.secret_key = "holaMundo"
+        # Se definen las distintas rutas y metodos asociados de la aplicacion
         self.app.route('/')(self.home)
         self.app.route('/login')(self.login)
         self.app.route('/signup', methods=['POST', 'GET'])(self.signup)
@@ -34,12 +52,17 @@ class JodApp:
         self.app.route('/verFiesta', methods=['POST'])(self.verFiesta)
         self.app.route('/accionEvento', methods=['POST'])(self.accionEvento)
         self.app.route('/reestablecerContrasenna', methods=['POST'])(self.reestablecerContrasenna)
-    
+
+    # Metodo privado para formatear el tiempo del servidor
     def __formatoServidorTiempo(self):
+        # Obtiene el tiempo local del servidor
         servidorTiempo = time.localtime()
+        # Formatea el tiempo en formato hora minuto segundo
         return time.strftime("%I:%M:%S %p", servidorTiempo)
 
-    # Objetos para el HTML
+    # Metodo privado que obtiene los datos de una lista de objetos de Eventos (Fiesta, Concierto o Match)
+    # Utiliza el metodo mostrarLista para obtener la cadena y luego la divide en una lista
+    # Esta lista luego sera llevada a un html para ser mostrada en distintos campos al ver el evento
     def __listaDatosEventos(self, listaEventosObjetos):
         listaDatosEventos = []
         for evento in listaEventosObjetos:
@@ -51,29 +74,43 @@ class JodApp:
             listaDatosEventos.append(listaEvento)
         return listaDatosEventos
 
+    # Metodo privado para obtener el grafico de barras con los diez eventos mas asistidos
+    # listaOrdenada es una lista de diccionarios que contiene informacion sobre las fiestas
+    # Cada diccionario contiene dos claves, 'c' para la cantidad de asistenes y 'f' para los nombres de las fiestas
+    # Retorna la imagen codificada en str que representa la imagen del grafico codificado en base64
     def __graficoBarrasMasAsistentes(self, listaOrdenada):
+        # Crea una nueva figura
         plt.figure()
-        # listaOrdenada es una lista de diccionarios que alberga 'c'=cant de asistentes 'f'=nombre de la fiesta
+        # Extrae la cantidad de asistentes y los nombres de las fiestas de la lista ordenada
         cantidadesAsistentes = [fiesta['c'] for fiesta in listaOrdenada[:10]]
         nombresFiestas = [fiesta['f'] for fiesta in listaOrdenada[:10]]
-
+        # Crea el grafico de barras
         plt.bar(nombresFiestas, cantidadesAsistentes)
+        # Etiqueta los ejees y le da un titulo al grafico
         plt.xlabel('Nombre de la Fiesta')
         plt.ylabel('Cantidad de Asistentes')
         plt.title('Cantidad de Asistentes por Fiesta')
         # Se obtiene la figura actual
         fig = plt.gcf()
-
+        # Crea un objeto BytesIO para guardar la imagen
         output = io.BytesIO()
         # Guarda la figura en el objeto BytesIO
         fig.savefig(output, format='png')
+        # Cierra la figura para liberar memoria
         plt.close()
-        # objeto de io.BytesIO que contiene los datos de la imagen
+        # Codifica la imagen en base64 y la decodifica en una cadena
         imagenCodificada = base64.b64encode(output.getvalue()).decode('utf-8')
+        # retorna la imagen
         return imagenCodificada
 
+    # Metodo privado para generar un grafico de Torta con las 10 fiestas mas asistidas
+    # listaOrdenada es una lista de diccionarios que contiene informacion sobre las fiestas
+    # Cada diccionario contiene dos claves, 'c' para la cantidad de asistenes y 'f' para los nombres de las fiestas
+    # Retorna la imagen codificada en str que representa la imagen del grafico codificado en base64
     def __graficoTortaMasAsistentes(self, listaOrdenada):
-        plt.figure
+        # Crea una nueva figura
+        plt.figure()
+        # Extrae la cantidad de asistentes 
         asistentes = []
         nombreFiesta = []
         #listaOrdenada es una lista de diccionarios que alberga 'c'=cant de asistentes 'f'=nombre de la fiesta
