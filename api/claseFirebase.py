@@ -124,7 +124,7 @@ class Firebase():
 
 
     # baseDeDatosTR
-    # El siguiente metodo se utiliza para editar cualquier diccionario en formato JSON
+    # El siguiente metodo publico se utiliza para editar cualquier diccionario en formato JSON
     # Con tipo especificamos en que seccion se encuentra el diccionario a editar, por ejemplo Usuarios
     # Con id especificamos que diccionario sera editado, en el caso de Personas seria con el DNI
     # Diccio guardaria todos los nombres de los atributos a editar, junto con sus nuevos valores 
@@ -165,7 +165,7 @@ class Firebase():
         return distinto
 
     # baseDeDatosTR
-    # El siguiente metodo se utiliza para editar un ID (por ejemplo DNI)
+    # El siguiente metodo publico se utiliza para editar un ID (por ejemplo DNI)
     # Con tipo especificamos en que seccion se encuentra el diccionario a editar, por ejemplo Usuarios
     # Con idObjeto especificamos que clave sera editada y reemplazada por idNuevo 
     def editarID(self, tipo, idObjeto, idNuevo):
@@ -180,7 +180,7 @@ class Firebase():
         return idCambiado
     
     # baseDeDatosTR
-    # Mediante este metodo se obtiene el ID del objeto recien creado
+    # Mediante este metodo publico se obtiene el ID del objeto recien creado
     # Primero se debe pasar como argumento al objeto convertido en diccionario
     # Tambien la seccion que podria ser Fiestas, Conciertos, etc
     def obtenerID(self, diccio, tipo):
@@ -190,16 +190,21 @@ class Firebase():
             if listaDiccio[clave] == diccio:
                 return clave
         return None
-    
+    # El siguiente metodo publico obtiene todos los diccionarios mediante el tipo (ejemplo Usuarios) y su clave (ejemplo "dni")
     def obtenerTodosDictConKey(self, tipo, clave='id'):
+        # Obtiene los diccionarios en formato Pyre
         listaDictPyre = self.baseDeDatosTR.child(tipo).get()
         listaDict = []
         for diccio in listaDictPyre:
             diccioAux = diccio.val()
+            # Se guardan los childs como el valor del ID o DNI, dependiendo de que datos se quieren obtener
             diccioAux[clave] = diccio.key()
             listaDict.append(diccioAux)
         return listaDict
 
+    # El siguiente metodo publico recupera todos los diccionarios 
+    # En el caso de que se quiera obtener diccionarios con un valor especifico
+    # Y tambien en el caso de que se quiera saber si ese valor existe dentro de alguna lista de algun diccionario
     def recuperarTodosDict(self, tipo, valor=None, asistidos=False):
         # Se obtienen todos los elementos del "tipo"
         diccionarios = self.baseDeDatosTR.child(tipo).get().val()
@@ -229,16 +234,8 @@ class Firebase():
                 diccionarios = listaNueva
         return diccionarios
     
-    def recuperarTodosDictUser(self, tipo):
-        # Se obtienen todos los elementos del "tipo"
-        diccionarios = self.baseDeDatosTR.child(tipo).get().val()
-        # Ahora se recuperan todos los elementos en un diccionario que las claves son los ids, y los valores son los diccionarios del "tipo"
-        if diccionarios is None:
-            diccionarios = {}
-        return diccionarios
-
     # baseDeDatosTR
-    # El siguiente metodo se utiliza para obtener muchos objetos en base a una lista de IDs
+    # El siguiente metodo publico se utiliza para obtener muchos diccionarios mediante una lista de IDs
     # En el caso de que la lista sea de un solo ID, devolvera solo un diccionario
     # Este es un dict Pyre, eso quiere decir que tiene .value()=valores y .key()=id/child/dni
     def obtenerListaDiccionarios(self, tipo, listaIDs):
